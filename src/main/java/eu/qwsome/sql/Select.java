@@ -5,6 +5,7 @@ import eu.qwsome.sql.condition.Condition;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Lukáš Kvídera
@@ -56,6 +57,10 @@ public class Select {
     return builder.toString();
   }
 
+  private String orderBy(Column... columns) {
+    return toSql() + " ORDER BY " + Arrays.stream(columns).map(Column::get).collect(Collectors.joining(","));
+  }
+
   private String getColumns() {
     return String.join(",", this.columns);
   }
@@ -70,6 +75,10 @@ public class Select {
       Select.this.conditions.add(eq);
       return new ConditionsBuiltPhase();
     }
+
+    public String orderBy(final Column... columns) {
+      return Select.this.orderBy(columns);
+    }
   }
 
   public class ConditionsBuiltPhase {
@@ -77,5 +86,8 @@ public class Select {
       return Select.this.toSql();
     }
 
+    public String orderBy(final Column... columns) {
+      return Select.this.orderBy(columns);
+    }
   }
 }

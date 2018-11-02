@@ -109,12 +109,27 @@ public class SelectTest {
           .or(column("y").isNull())
           .or(
             column("a").isNotNull()
-            .and(column("b").isLessThan(column("x")))
+              .and(column("b").isLessThan(column("x")))
               .and(column("c").isGreaterThan(column("x"))
               )
           )).toSql();
 
     assertThat(sql).isEqualTo("SELECT * FROM table WHERE " +
       "(((y1 IS NULL AND x BETWEEN from AND to) OR y IS NULL) OR ((a IS NOT NULL AND b < x) AND c > x))");
+  }
+
+
+  @Test
+  public void testOrderBy() {
+    final String sql = select().from("table").orderBy(column("x"));
+    assertThat(sql).isEqualTo("SELECT * FROM table ORDER BY x");
+  }
+
+  @Test
+  public void testOrderBy_WithConditions() {
+    final String sql = select().from("table")
+      .where(column("x").isEqualTo(column("y")))
+      .orderBy(column("x"));
+    assertThat(sql).isEqualTo("SELECT * FROM table WHERE x = y ORDER BY x");
   }
 }
