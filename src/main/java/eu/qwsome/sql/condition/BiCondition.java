@@ -8,7 +8,14 @@ import eu.qwsome.sql.Column;
  */
 abstract class BiCondition implements Condition {
 
+  /**
+   * The colum on the left side of operator.
+   */
   private final Column first;
+
+  /**
+   * The colum on the right side of operator.
+   */
   private final Column second;
 
   BiCondition(final Column first, final Column second) {
