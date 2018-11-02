@@ -110,10 +110,11 @@ public class SelectTest {
           .or(
             column("a").isNotNull()
             .and(column("b").isLessThan(column("x")))
-          )
-      )
-      .toSql();
+              .and(column("c").isGreaterThan(column("x"))
+              )
+          )).toSql();
 
-    assertThat(sql).isEqualTo("SELECT * FROM table WHERE (((y1 IS NULL AND x BETWEEN from AND to) OR y IS NULL) OR (a IS NOT NULL AND b < x))");
+    assertThat(sql).isEqualTo("SELECT * FROM table WHERE " +
+      "(((y1 IS NULL AND x BETWEEN from AND to) OR y IS NULL) OR ((a IS NOT NULL AND b < x) AND c > x))");
   }
 }

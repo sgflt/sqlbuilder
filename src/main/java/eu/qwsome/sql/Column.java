@@ -3,11 +3,16 @@ package eu.qwsome.sql;
 import eu.qwsome.sql.condition.Between;
 import eu.qwsome.sql.condition.Condition;
 import eu.qwsome.sql.condition.IsEqual;
+import eu.qwsome.sql.condition.IsGereaterThan;
 import eu.qwsome.sql.condition.IsLessThan;
 import eu.qwsome.sql.condition.IsNull;
 import eu.qwsome.sql.condition.IsNotNull;
 
 /**
+ * This class represents a column in a database table.
+ *
+ * Column can be compared to other columns. Product of comparison rules is a {@link Condition}
+ *
  * @author Lukáš Kvídera
  */
 public class Column {
@@ -44,5 +49,9 @@ public class Column {
 
   public Condition isNotNull() {
     return new IsNotNull(this);
+  }
+
+  public Condition isGreaterThan(final Column another) {
+    return new IsGereaterThan(this, another);
   }
 }
