@@ -22,8 +22,15 @@ abstract class BiCondition implements Condition {
   }
 
   @Override
+  public ValueConstructor getValues() {
+    return new ValueConstructor()
+      .add(this.first)
+      .add(this.second);
+  }
+
+  @Override
   public CharSequence get() {
-    return this.first.get() + getOperator() + this.second.get();
+    return this.first.getSql() + getOperator() + this.second.getSql();
   }
 
   abstract String getOperator();

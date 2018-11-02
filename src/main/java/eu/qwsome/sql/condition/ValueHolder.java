@@ -6,9 +6,16 @@ package eu.qwsome.sql.condition;
 public interface ValueHolder {
 
   /**
-   * Returnc column name or question martk as a wildcard.
+   * Returns column name or question martk as a wildcard.
    *
    * @return string representation of value in SQL
    */
-  String get();
+  String getSql();
+
+  /**
+   * Returns valou that can be bount into wildcard, or null for column name.
+   *
+   * @return value to be bound in prepared statement
+   */
+  Object getValue();
 }

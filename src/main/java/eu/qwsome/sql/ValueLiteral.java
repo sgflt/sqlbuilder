@@ -13,12 +13,17 @@ public class ValueLiteral implements ValueHolder {
     this.value = value;
   }
 
-  public static ValueLiteral value(Object value) {
+  public static ValueLiteral value(final Object value) {
     return new ValueLiteral(value);
   }
 
   @Override
-  public String get() {
+  public String getSql() {
     return "?";
+  }
+
+  @Override
+  public Object getValue() {
+    return this.value;
   }
 }

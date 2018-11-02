@@ -35,4 +35,5 @@ public interface Condition {
     return new Or(this, another);
   }
 
+  ValueConstructor getValues();
 }

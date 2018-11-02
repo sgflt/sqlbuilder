@@ -1,6 +1,7 @@
 package eu.qwsome.sql;
 
 import eu.qwsome.sql.condition.Condition;
+import eu.qwsome.sql.condition.ValueConstructor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,7 +16,7 @@ public class Select {
 
   private String sourceTable;
   private final List<String> columns = new ArrayList<>();
-  private final List<Condition> conditions= new ArrayList<>();
+  private Condition condition;
 
   private Select(final String columns) {
     this.columns.add(columns);
@@ -42,24 +43,21 @@ public class Select {
     return new TableSelectedPhase();
   }
 
-  private String toSql() {
+  public String toSql() {
     final StringBuilder builder = new StringBuilder();
     builder.append("SELECT ")
         .append(getColumns())
         .append(" FROM " )
         .append(this.sourceTable);
 
-    if (!this.conditions.isEmpty()) {
-      builder.append(" WHERE ");
-      for (final Condition condition : this.conditions) {
-        builder.append(condition.get());
-      }
+    if (this.condition != null) {
+      builder.append(" WHERE ").append(this.condition.get());
     }
     return builder.toString();
   }
 
   private String orderBy(final Column... columns) {
-    return toSql() + " ORDER BY " + Arrays.stream(columns).map(Column::get).collect(Collectors.joining(","));
+    return toSql() + " ORDER BY " + Arrays.stream(columns).map(Column::getSql).collect(Collectors.joining(","));
   }
 
   private String getColumns() {
@@ -72,8 +70,8 @@ public class Select {
       return Select.this.toSql();
     }
 
-    public ConditionsBuiltPhase where(final Condition eq) {
-      Select.this.conditions.add(eq);
+    public ConditionsBuiltPhase where(final Condition condition) {
+      Select.this.condition = condition;
       return new ConditionsBuiltPhase();
     }
 
@@ -85,6 +83,10 @@ public class Select {
   public class ConditionsBuiltPhase {
     public String toSql() {
       return Select.this.toSql();
+    }
+
+    public ValueConstructor toValues() {
+      return Select.this.condition.getValues();
     }
 
     public String orderBy(final Column... columns) {

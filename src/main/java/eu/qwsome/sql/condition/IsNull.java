@@ -3,16 +3,15 @@ package eu.qwsome.sql.condition;
 /**
  * @author Lukáš Kvídera
  */
-public class IsNull implements Condition {
+class IsNull extends UnaryCondition {
 
-  private final ValueHolder column;
-
-  public IsNull(final ValueHolder column) {
-    this.column = column;
+  IsNull(final ValueHolder field) {
+    super(field);
   }
 
   @Override
-  public CharSequence get() {
-    return this.column.get() + " IS NULL";
+  String getSuffix() {
+    return " IS NULL";
   }
+
 }

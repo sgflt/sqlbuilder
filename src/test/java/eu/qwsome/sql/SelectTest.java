@@ -1,12 +1,13 @@
 package eu.qwsome.sql;
 
 import eu.qwsome.sql.condition.Condition;
+import eu.qwsome.sql.condition.ValueConstructor;
 import org.junit.jupiter.api.Test;
 
 import static eu.qwsome.sql.Column.column;
+import static eu.qwsome.sql.Select.select;
 import static eu.qwsome.sql.ValueLiteral.value;
 import static eu.qwsome.sql.condition.FieldComparator.comparedField;
-import static eu.qwsome.sql.Select.select;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class SelectTest {
@@ -174,5 +175,42 @@ public class SelectTest {
       .where(comparedField(value("x")).isBetween(column("c"), value(43)))
       .toSql();
     assertThat(sql).isEqualTo("SELECT * FROM table WHERE ? BETWEEN c AND ?");
+  }
+
+  @Test
+  public void testValueBindingWithLiteralBetween() {
+    final ValueConstructor values = select().from("table")
+      .where(comparedField(column("x")).isBetween(value(32), value(43)))
+      .toValues();
+
+    assertThat(values.toArray()).isEqualTo(new Object[]{32, 43});
+  }
+
+  @Test
+  public void testValueBindingWithLiteralBetween_LiteralAsSource() {
+    final ValueConstructor values = select().from("table")
+      .where(comparedField(value("x")).isBetween(column("c"), value(43)))
+      .toValues();
+
+    assertThat(values.toArray()).isEqualTo(new Object[]{"x", 43});
+  }
+
+  @Test
+  public void testValueBindingWithLiteralBetween_LiteralAsSourceMultipletimes() {
+    final Select select = select();
+    final ValueConstructor values = select.from("table")
+      .where(
+        comparedField(value("x")).isBetween(column("c"), value(43))
+          .and(comparedField(column("y")).isEqualTo(value(28)))
+          .and(
+            comparedField(column("z")).isEqualTo(value(32))
+              .or(comparedField(column("w")).isGreaterThan(value(50)))
+          )
+      )
+      .toValues();
+
+    assertThat(values.toArray()).isEqualTo(new Object[]{"x", 43, 28, 32, 50});
+    assertThat(select.toSql())
+      .isEqualTo("SELECT * FROM table WHERE ((? BETWEEN c AND ? AND y = ?) AND (z = ? OR w > ?))");
   }
 }

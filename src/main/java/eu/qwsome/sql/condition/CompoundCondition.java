@@ -23,6 +23,13 @@ abstract class CompoundCondition implements Condition {
     return "(" + this.first.get() + getOperator() + this.second.get() + ")";
   }
 
+  @Override
+  public ValueConstructor getValues() {
+    return new ValueConstructor()
+      .add(this.first.getValues())
+      .add(this.second.getValues());
+  }
+
   /**
    * @return string representation of an operator
    * @see And

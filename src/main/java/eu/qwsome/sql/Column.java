@@ -19,8 +19,13 @@ public class Column implements ValueHolder {
     return new Column(name);
   }
 
-  public String get() {
+  @Override
+  public String getSql() {
     return this.name;
   }
 
+  @Override
+  public String getValue() {
+    return null;
+  }
 }
