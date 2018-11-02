@@ -11,7 +11,7 @@ abstract class BiCondition implements Condition {
   private final Column first;
   private final Column second;
 
-  public BiCondition(final Column first, final Column second) {
+  BiCondition(final Column first, final Column second) {
     this.first = first;
     this.second = second;
   }
