@@ -1,7 +1,6 @@
 package eu.qwsome.sql.condition;
 
 
-
 /**
  * @author Lukáš Kvídera
  */
@@ -35,4 +34,5 @@ public interface Condition {
   default Condition or(final Condition another) {
     return new Or(this, another);
   }
+
 }

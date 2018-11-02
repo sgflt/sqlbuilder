@@ -1,18 +1,16 @@
 package eu.qwsome.sql.condition;
 
-import eu.qwsome.sql.Column;
-
 /**
  * @author Lukáš Kvídera
  */
 public class Between implements Condition {
 
-  private final Column column;
-  private final Column from;
-  private final Column to;
+  private final ValueHolder column;
+  private final ValueHolder from;
+  private final ValueHolder to;
 
 
-  public Between(final Column column, final Column from, final Column to) {
+  public Between(final ValueHolder column, final ValueHolder from, final ValueHolder to) {
     this.column = column;
     this.from = from;
     this.to = to;

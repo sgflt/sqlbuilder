@@ -1,8 +1,6 @@
 package eu.qwsome.sql.condition;
 
 
-import eu.qwsome.sql.Column;
-
 /**
  * @author Lukáš Kvídera
  */
@@ -11,14 +9,14 @@ abstract class BiCondition implements Condition {
   /**
    * The colum on the left side of operator.
    */
-  private final Column first;
+  private final ValueHolder first;
 
   /**
    * The colum on the right side of operator.
    */
-  private final Column second;
+  private final ValueHolder second;
 
-  BiCondition(final Column first, final Column second) {
+  BiCondition(final ValueHolder first, final ValueHolder second) {
     this.first = first;
     this.second = second;
   }

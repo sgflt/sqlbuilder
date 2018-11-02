@@ -1,15 +1,13 @@
 package eu.qwsome.sql.condition;
 
-import eu.qwsome.sql.Column;
-
 /**
  * @author Lukáš Kvídera
  */
 public class IsNotNull implements Condition {
 
-  private final Column column;
+  private final ValueHolder column;
 
-  public IsNotNull(final Column column) {
+  public IsNotNull(final ValueHolder column) {
     this.column = column;
   }
 

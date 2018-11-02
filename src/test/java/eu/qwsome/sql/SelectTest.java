@@ -1,8 +1,11 @@
 package eu.qwsome.sql;
 
+import eu.qwsome.sql.condition.Condition;
 import org.junit.jupiter.api.Test;
 
 import static eu.qwsome.sql.Column.column;
+import static eu.qwsome.sql.ValueLiteral.value;
+import static eu.qwsome.sql.condition.FieldComparator.comparedField;
 import static eu.qwsome.sql.Select.select;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -28,20 +31,20 @@ public class SelectTest {
 
   @Test
   public void testSimpleSelect_SingleCondition() {
-    final String sql = select().from("table").where(column("column1").isEqualTo(column("column2"))).toSql();
+    final String sql = select().from("table").where(comparedField(column("column1")).isEqualTo(column("column2"))).toSql();
     assertThat(sql).isEqualTo("SELECT * FROM table WHERE column1 = column2");
   }
 
   @Test
   public void testWithColumn_SingleCondition() {
-    final String sql = select("column42").from("table").where(column("column1").isEqualTo(column("column2"))).toSql();
+    final String sql = select("column42").from("table").where(comparedField(column("column1")).isEqualTo(column("column2"))).toSql();
     assertThat(sql).isEqualTo("SELECT column42 FROM table WHERE column1 = column2");
   }
 
   @Test
   public void testSelectWithColumns_SingleCondition() {
     final String sql = select("column42", "column49").from("table")
-      .where(column("column1").isEqualTo(column("column2"))).toSql();
+      .where(comparedField(column("column1")).isEqualTo(column("column2"))).toSql();
 
     assertThat(sql).isEqualTo("SELECT column42,column49 FROM table WHERE column1 = column2");
   }
@@ -50,8 +53,8 @@ public class SelectTest {
   public void testSimpleSelect_MultipleConditions() {
     final String sql = select().from("table")
       .where(
-        column("column1").isEqualTo(column("column2"))
-          .and(column("column4").isEqualTo(column("column5")))
+        comparedField(column("column1")).isEqualTo(column("column2"))
+          .and(comparedField(column("column4")).isEqualTo(column("column5")))
       ).toSql();
 
     assertThat(sql).isEqualTo("SELECT * FROM table WHERE (column1 = column2 AND column4 = column5)");
@@ -61,8 +64,8 @@ public class SelectTest {
   public void testWithColumn_MultipleConditions() {
     final String sql = select("column42").from("table")
       .where(
-        column("column1").isEqualTo(column("column2"))
-          .and(column("column4").isEqualTo(column("column5")))
+        comparedField(column("column1")).isEqualTo(column("column2"))
+          .and(comparedField(column("column4")).isEqualTo(column("column5")))
       ).toSql();
 
     assertThat(sql).isEqualTo("SELECT column42 FROM table WHERE (column1 = column2 AND column4 = column5)");
@@ -72,8 +75,8 @@ public class SelectTest {
   public void testSelectWithColumns_MultipleConditions() {
     final String sql = select("column42", "column49").from("table")
       .where(
-        column("column1").isEqualTo(column("column2"))
-          .and(column("column4").isEqualTo(column("column5")))
+        comparedField(column("column1")).isEqualTo(column("column2"))
+          .and(comparedField(column("column4")).isEqualTo(column("column5")))
       ).toSql();
 
     assertThat(sql).isEqualTo("SELECT column42,column49 FROM table WHERE (column1 = column2 AND column4 = column5)");
@@ -82,7 +85,7 @@ public class SelectTest {
   @Test
   public void testSimpleSelect_Between() {
     final String sql = select().from("table")
-      .where(column("x").isBetween(column("from"), column("to")))
+      .where(comparedField(column("x")).isBetween(column("from"), column("to")))
       .toSql();
 
     assertThat(sql).isEqualTo("SELECT * FROM table WHERE x BETWEEN from AND to");
@@ -92,8 +95,8 @@ public class SelectTest {
   public void testSimpleSelect_BetweenOrSomethingElse() {
     final String sql = select().from("table")
       .where(
-        column("x").isBetween(column("from"), column("to"))
-          .or(column("y").isNull())
+        comparedField(column("x")).isBetween(column("from"), column("to"))
+          .or(comparedField(column("y")).isNull())
       )
       .toSql();
 
@@ -104,13 +107,13 @@ public class SelectTest {
   public void testAllVariants() {
     final String sql = select().from("table")
       .where(
-        column("y1").isNull()
-          .and(column("x").isBetween(column("from"), column("to")))
-          .or(column("y").isNull())
+        comparedField(column("y1")).isNull()
+          .and(comparedField(column("x")).isBetween(column("from"), column("to")))
+          .or(comparedField(column("y")).isNull())
           .or(
-            column("a").isNotNull()
-              .and(column("b").isLessThan(column("x")))
-              .and(column("c").isGreaterThan(column("x"))
+            comparedField(column("a")).isNotNull()
+              .and(comparedField(column("b")).isLessThan(column("x")))
+              .and(comparedField(column("c")).isGreaterThan(column("x"))
               )
           )).toSql();
 
@@ -128,8 +131,48 @@ public class SelectTest {
   @Test
   public void testOrderBy_WithConditions() {
     final String sql = select().from("table")
-      .where(column("x").isEqualTo(column("y")))
+      .where(comparedField(column("x")).isEqualTo(column("y")))
       .orderBy(column("x"));
     assertThat(sql).isEqualTo("SELECT * FROM table WHERE x = y ORDER BY x");
+  }
+
+  @Test
+  public void testSqlGenerationInFor() {
+    Condition conditionRoot = comparedField(column("xxx")).isEqualTo(column("yyy"));
+
+    for (int i = 0; i < 10; i++) {
+      conditionRoot = conditionRoot.and(comparedField(column(String.valueOf(i)))
+        .isEqualTo(column(String.valueOf(i + 1))));
+    }
+
+    final String sql = select().from("table")
+      .where(conditionRoot)
+      .toSql();
+    assertThat(sql).isEqualTo("SELECT * FROM table WHERE ((((((((((xxx = yyy AND 0 = 1) AND 1 = 2) AND 2 = 3)" +
+      " AND 3 = 4) AND 4 = 5) AND 5 = 6) AND 6 = 7) AND 7 = 8) AND 8 = 9) AND 9 = 10)");
+  }
+
+  @Test
+  public void testSimpleSelectWithLiteralCondition() {
+    final String sql = select().from("table")
+      .where(comparedField(column("x")).isEqualTo(value(32)))
+      .toSql();
+    assertThat(sql).isEqualTo("SELECT * FROM table WHERE x = ?");
+  }
+
+  @Test
+  public void testSimpleSelectWithLiteralBetween() {
+    final String sql = select().from("table")
+      .where(comparedField(column("x")).isBetween(value(32), value(43)))
+      .toSql();
+    assertThat(sql).isEqualTo("SELECT * FROM table WHERE x BETWEEN ? AND ?");
+  }
+
+  @Test
+  public void testSimpleSelectWithLiteralBetween_LiteralAsSource() {
+    final String sql = select().from("table")
+      .where(comparedField(value("x")).isBetween(column("c"), value(43)))
+      .toSql();
+    assertThat(sql).isEqualTo("SELECT * FROM table WHERE ? BETWEEN c AND ?");
   }
 }

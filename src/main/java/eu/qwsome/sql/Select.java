@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
+ * This class simplifies dynamic sql generation.
  * @author Lukáš Kvídera
  */
 public class Select {
@@ -57,7 +58,7 @@ public class Select {
     return builder.toString();
   }
 
-  private String orderBy(Column... columns) {
+  private String orderBy(final Column... columns) {
     return toSql() + " ORDER BY " + Arrays.stream(columns).map(Column::get).collect(Collectors.joining(","));
   }
 

@@ -1,12 +1,10 @@
 package eu.qwsome.sql.condition;
 
-import eu.qwsome.sql.Column;
-
 /**
  * @author Lukáš Kvídera
  */
 public class IsGereaterThan extends BiCondition {
-  public IsGereaterThan(final Column column, final Column another) {
+  public IsGereaterThan(final ValueHolder column, final ValueHolder another) {
     super(column, another);
   }
 
