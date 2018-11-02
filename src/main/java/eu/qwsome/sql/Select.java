@@ -19,7 +19,7 @@ public class Select {
     this.columns.add(columns);
   }
 
-  public Select(final String[] columns) {
+  private Select(final String[] columns) {
     this.columns.addAll(Arrays.asList(columns));
   }
 
