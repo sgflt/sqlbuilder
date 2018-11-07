@@ -23,6 +23,7 @@ public class Select {
    * List of columns that will be selected.
    */
   private final List<String> columns = new ArrayList<>();
+  private final List<Join> joins = new ArrayList<>();
   private Condition condition;
 
   /**
@@ -123,6 +124,15 @@ public class Select {
       .append(" FROM ")
       .append(this.sourceTable);
 
+    if (!this.joins.isEmpty()) {
+      for (final Join join : this.joins) {
+        builder.append(" JOIN ")
+          .append(join.joinTable)
+          .append(" ON ")
+          .append(join.condition.get());
+      }
+    }
+
     if (this.condition != null) {
       builder.append(" WHERE ").append(this.condition.get());
     }
@@ -177,6 +187,16 @@ public class Select {
     public String orderBy(final Column... columns) {
       return Select.this.orderBy(columns);
     }
+
+    /**
+     * Adds a join clause to the statement.
+     *
+     * @param joinTable table to be joined
+     * @return next phase that allows only relevant methods
+     */
+    public JoinPhase join(final String joinTable) {
+      return new JoinPhase(joinTable);
+    }
   }
 
   public class ConditionsBuiltPhase {
@@ -200,5 +220,33 @@ public class Select {
     public String orderBy(final Column... columns) {
       return Select.this.orderBy(columns);
     }
+  }
+
+
+  private static class Join {
+
+    private final String joinTable;
+
+    private final Condition condition;
+
+    public Join(final String joinTable, final Condition condition) {
+      this.joinTable = joinTable;
+      this.condition = condition;
+    }
+  }
+
+  public class JoinPhase {
+
+    private final String joinTable;
+
+    private JoinPhase(final String joinTable) {
+      this.joinTable = joinTable;
+    }
+
+    public TableSelectedPhase on(final Condition condition) {
+      Select.this.joins.add(new Join(this.joinTable, condition));
+      return new TableSelectedPhase();
+    }
+
   }
 }
