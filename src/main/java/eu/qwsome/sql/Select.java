@@ -23,7 +23,15 @@ public class Select {
    * List of columns that will be selected.
    */
   private final List<String> columns = new ArrayList<>();
+
+  /**
+   * A list of joins that generates multiple JOIN clauses.
+   */
   private final List<Join> joins = new ArrayList<>();
+
+  /**
+   * Condition used in WHERE clause.
+   */
   private Condition condition;
 
   /**
@@ -83,7 +91,7 @@ public class Select {
   }
 
   /**
-   * This mehod creates a select instance that can be effecitvely used as following snippet:
+   * This mehod creates a select instance that can be effectively used as following snippet:
    * <p>
    * {@code
    * select("column1", "column2", ...).from("table").toSql()
@@ -199,6 +207,9 @@ public class Select {
     }
   }
 
+  /**
+   * Final phase.
+   */
   public class ConditionsBuiltPhase {
     /**
      * @see Select#toSql()
@@ -223,10 +234,19 @@ public class Select {
   }
 
 
+  /**
+   * Crate for join attributes.
+   */
   private static class Join {
 
+    /**
+     * Table used in JOIN clause.
+     */
     private final String joinTable;
 
+    /**
+     * Condition in ON clause.
+     */
     private final Condition condition;
 
     public Join(final String joinTable, final Condition condition) {
@@ -235,14 +255,26 @@ public class Select {
     }
   }
 
+  /**
+   * Phase available after {@link TableSelectedPhase}
+   */
   public class JoinPhase {
 
+    /**
+     * Table that will be joined.
+     */
     private final String joinTable;
 
     private JoinPhase(final String joinTable) {
       this.joinTable = joinTable;
     }
 
+    /**
+     * Creates a join clues with condition.
+     *
+     * @param condition that will be used in ON clause
+     * @return next phase that allows only relevant methods
+     */
     public TableSelectedPhase on(final Condition condition) {
       Select.this.joins.add(new Join(this.joinTable, condition));
       return new TableSelectedPhase();
