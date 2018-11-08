@@ -1,5 +1,6 @@
 package eu.qwsome.sql;
 
+import eu.qwsome.sql.Join.Type;
 import eu.qwsome.sql.condition.Condition;
 import eu.qwsome.sql.condition.ValueConstructor;
 
@@ -134,10 +135,7 @@ public class Select {
 
     if (!this.joins.isEmpty()) {
       for (final Join join : this.joins) {
-        builder.append(" JOIN ")
-          .append(join.joinTable)
-          .append(" ON ")
-          .append(join.condition.get());
+        builder.append(join.get());
       }
     }
 
@@ -203,7 +201,17 @@ public class Select {
      * @return next phase that allows only relevant methods
      */
     public JoinPhase join(final String joinTable) {
-      return new JoinPhase(joinTable);
+      return new JoinPhase(joinTable, Type.INNER);
+    }
+
+    /**
+     * Adds a left join clause to the statement.
+     *
+     * @param joinTable table to be joined
+     * @return next phase that allows only relevant methods
+     */
+    public JoinPhase leftJoin(final String joinTable) {
+      return new JoinPhase(joinTable, Type.LEFT);
     }
   }
 
@@ -235,27 +243,6 @@ public class Select {
 
 
   /**
-   * Crate for join attributes.
-   */
-  private static class Join {
-
-    /**
-     * Table used in JOIN clause.
-     */
-    private final String joinTable;
-
-    /**
-     * Condition in ON clause.
-     */
-    private final Condition condition;
-
-    public Join(final String joinTable, final Condition condition) {
-      this.joinTable = joinTable;
-      this.condition = condition;
-    }
-  }
-
-  /**
    * Phase available after {@link TableSelectedPhase}
    */
   public class JoinPhase {
@@ -264,10 +251,13 @@ public class Select {
      * Table that will be joined.
      */
     private final String joinTable;
+    private final Type type;
 
-    private JoinPhase(final String joinTable) {
+    private JoinPhase(final String joinTable, final Type type) {
       this.joinTable = joinTable;
+      this.type = type;
     }
+
 
     /**
      * Creates a join clues with condition.
@@ -276,7 +266,16 @@ public class Select {
      * @return next phase that allows only relevant methods
      */
     public TableSelectedPhase on(final Condition condition) {
-      Select.this.joins.add(new Join(this.joinTable, condition));
+      switch (this.type) {
+        case INNER:
+          Select.this.joins.add(new InnerJoin(this.joinTable, condition));
+          break;
+        case LEFT:
+          Select.this.joins.add(new LeftJoin(this.joinTable, condition));
+          break;
+        default:
+          throw new UnsupportedOperationException(this.type.toString());
+      }
       return new TableSelectedPhase();
     }
 
