@@ -38,6 +38,6 @@ public class ComparableFieldImpl implements ComparableField {
 
   @Override
   public Condition isGreaterThan(final ValueHolder another) {
-    return new IsGereaterThan(this.comparedField, another);
+    return new IsGreaterThan(this.comparedField, another);
   }
 }
