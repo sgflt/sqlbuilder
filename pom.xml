@@ -6,7 +6,31 @@
 
   <groupId>eu.qwsome</groupId>
   <artifactId>sql-builder</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0.0-SNAPSHOT</version>
+
+  <name>The raw sql builder</name>
+
+  <url>https://github.com/sgflt/sqlbuilder</url>
+
+  <scm>
+    <url>https://github.com/sgflt/sqlbuilder</url>
+    <connection>scm:git:https://github.com/sgflt/sqlbuilder</connection>
+    <developerConnection>scm:git:ssh://git@github.com/sgflt/sqlbuilder</developerConnection>
+    <tag>HEAD</tag>
+  </scm>
+
+  <issueManagement>
+    <system>GitHub</system>
+    <url>https://github.com/sgflt/sqlbuilder/issues</url>
+  </issueManagement>
+
+  <developers>
+    <developer>
+      <name>Lukáš Kvídera</name>
+      <email>kvideral@qwsome.eu</email>
+      <timezone>CET</timezone>
+    </developer>
+  </developers>
 
   <properties>
     <maven.compiler.source>1.8</maven.compiler.source>
