@@ -13,9 +13,7 @@
   <url>https://github.com/sgflt/sqlbuilder</url>
 
   <scm>
-    <url>https://github.com/sgflt/sqlbuilder</url>
-    <connection>scm:git:https://github.com/sgflt/sqlbuilder</connection>
-    <developerConnection>scm:git:ssh://git@github.com/sgflt/sqlbuilder</developerConnection>
+    <url>https://github.com/sgflt/sqlbuilder.git</url>
     <tag>HEAD</tag>
   </scm>
 
