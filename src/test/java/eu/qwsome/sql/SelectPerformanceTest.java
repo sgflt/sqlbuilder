@@ -74,7 +74,7 @@ public class SelectPerformanceTest {
       .include(ComplexSelect.class.getSimpleName())
       .build();
     final Collection<RunResult> runResults = new Runner(opt).run();
-    assertResultIsWithinRange(runResults, 126.0, 145.0, 14.0);
+    assertResultIsWithinRange(runResults, 95.0, 106.0, 6.0);
   }
 
   private static void assertResultIsWithinRange(
@@ -188,7 +188,7 @@ public class SelectPerformanceTest {
           column("column2"),
           column("column3"),
           column("column4")
-        );
+        ).toSql();
     }
   }
 }

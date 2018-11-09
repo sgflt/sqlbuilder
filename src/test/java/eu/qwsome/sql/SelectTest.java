@@ -125,7 +125,7 @@ public class SelectTest {
 
   @Test
   public void testOrderBy() {
-    final String sql = select().from("table").orderBy(column("x"));
+    final String sql = select().from("table").orderBy(column("x")).toSql();
     assertThat(sql).isEqualTo("SELECT * FROM table ORDER BY x");
   }
 
@@ -133,7 +133,8 @@ public class SelectTest {
   public void testOrderBy_WithConditions() {
     final String sql = select().from("table")
       .where(comparedField(column("x")).isEqualTo(column("y")))
-      .orderBy(column("x"));
+      .orderBy(column("x"))
+      .toSql();
     assertThat(sql).isEqualTo("SELECT * FROM table WHERE x = y ORDER BY x");
   }
 

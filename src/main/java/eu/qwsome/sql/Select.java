@@ -7,7 +7,6 @@ import eu.qwsome.sql.condition.ValueConstructor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * This class simplifies dynamic sql generation.
@@ -34,6 +33,7 @@ public class Select {
    * Condition used in WHERE clause.
    */
   private Condition condition;
+  private OrderBy orderBy;
 
   /**
    * Creates select with single column.
@@ -144,6 +144,10 @@ public class Select {
       this.condition.appendTo(builder);
     }
 
+    if (orderBy != null) {
+      orderBy.appendTo(builder);
+    }
+
     return builder.toString();
   }
 
@@ -151,10 +155,11 @@ public class Select {
    * Adds an order by clause to the statement.
    *
    * @param columns that defines ordering
-   * @return order by clause
+   * @return order by phase
    */
-  private String orderBy(final Column... columns) {
-    return toSql() + " ORDER BY " + Arrays.stream(columns).map(Column::getSql).collect(Collectors.joining(","));
+  private OrderByPhase orderBy(final Column... columns) {
+    this.orderBy = new OrderBy(columns);
+    return new OrderByPhase();
   }
 
   /**
@@ -190,9 +195,9 @@ public class Select {
      * Adds an order by clause to the statement.
      *
      * @param columns that defines ordering
-     * @return order by clause
+     * @return order by phase
      */
-    public String orderBy(final Column... columns) {
+    public OrderByPhase orderBy(final Column... columns) {
       return Select.this.orderBy(columns);
     }
 
@@ -236,9 +241,9 @@ public class Select {
      * Adds an order by clause to the statement.
      *
      * @param columns that defines ordering
-     * @return order by clause
+     * @return order by phase
      */
-    public String orderBy(final Column... columns) {
+    public OrderByPhase orderBy(final Column... columns) {
       return Select.this.orderBy(columns);
     }
   }
@@ -281,5 +286,11 @@ public class Select {
       return new TableSelectedPhase();
     }
 
+  }
+
+  public class OrderByPhase {
+    public String toSql() {
+      return Select.this.toSql();
+    }
   }
 }
