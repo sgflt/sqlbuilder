@@ -1,10 +1,12 @@
 package eu.qwsome.sql.condition;
 
 
+import eu.qwsome.sql.api.Appendable;
+
 /**
  * @author Lukáš Kvídera
  */
-public interface Condition {
+public interface Condition extends Appendable {
   /**
    * This method returns string representation of a condition.
    * x = y

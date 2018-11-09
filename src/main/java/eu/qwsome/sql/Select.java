@@ -135,13 +135,15 @@ public class Select {
 
     if (!this.joins.isEmpty()) {
       for (final Join join : this.joins) {
-        builder.append(join.get());
+        join.appendTo(builder);
       }
     }
 
     if (this.condition != null) {
-      builder.append(" WHERE ").append(this.condition.get());
+      builder.append(" WHERE ");
+      this.condition.appendTo(builder);
     }
+
     return builder.toString();
   }
 

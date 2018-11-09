@@ -19,7 +19,15 @@ abstract class UnaryCondition implements Condition {
 
   @Override
   public CharSequence get() {
-    return this.field.getSql() + getSuffix();
+    final StringBuilder builder = new StringBuilder();
+    appendTo(builder);
+    return builder;
+  }
+
+  @Override
+  public void appendTo(final StringBuilder builder) {
+    builder.append(this.field.getSql())
+      .append(getSuffix());
   }
 
   abstract String getSuffix();

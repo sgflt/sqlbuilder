@@ -47,7 +47,7 @@ public class SelectPerformanceTest {
       .include(BasicSelectWithConditions.class.getSimpleName())
       .build();
     final Collection<RunResult> runResults = new Runner(opt).run();
-    assertResultIsWithinRange(runResults, 41.0, 50.0, 3.01);
+    assertResultIsWithinRange(runResults, 27.0, 32.0, 3.01);
   }
 
   @Test
@@ -56,7 +56,7 @@ public class SelectPerformanceTest {
       .include(BasicSelectWithJoin.class.getSimpleName())
       .build();
     final Collection<RunResult> runResults = new Runner(opt).run();
-    assertResultIsWithinRange(runResults, 52.0, 60.0, 4.0);
+    assertResultIsWithinRange(runResults, 34.0, 38.0, 4.0);
   }
 
   @Test
@@ -65,7 +65,7 @@ public class SelectPerformanceTest {
       .include(BasicSelectWithMultipleJoins.class.getSimpleName())
       .build();
     final Collection<RunResult> runResults = new Runner(opt).run();
-    assertResultIsWithinRange(runResults, 89.0, 100.0, 6.0);
+    assertResultIsWithinRange(runResults, 56.0, 64.0, 6.0);
   }
 
   @Test
@@ -74,7 +74,7 @@ public class SelectPerformanceTest {
       .include(ComplexSelect.class.getSimpleName())
       .build();
     final Collection<RunResult> runResults = new Runner(opt).run();
-    assertResultIsWithinRange(runResults, 187.0, 214.0, 14.0);
+    assertResultIsWithinRange(runResults, 126.0, 145.0, 14.0);
   }
 
   private static void assertResultIsWithinRange(

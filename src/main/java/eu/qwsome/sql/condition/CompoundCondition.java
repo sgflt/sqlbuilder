@@ -20,7 +20,9 @@ abstract class CompoundCondition implements Condition {
    */
   @Override
   public CharSequence get() {
-    return "(" + this.first.get() + getOperator() + this.second.get() + ")";
+    final StringBuilder builder = new StringBuilder();
+    appendTo(builder);
+    return builder;
   }
 
   @Override
@@ -28,6 +30,15 @@ abstract class CompoundCondition implements Condition {
     return new ValueConstructor()
       .add(this.first.getValues())
       .add(this.second.getValues());
+  }
+
+  @Override
+  public void appendTo(final StringBuilder builder) {
+    builder.append('(');
+    this.first.appendTo(builder);
+    builder.append(getOperator());
+    this.second.appendTo(builder);
+    builder.append(')');
   }
 
   /**

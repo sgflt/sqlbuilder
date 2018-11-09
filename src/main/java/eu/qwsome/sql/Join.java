@@ -1,5 +1,6 @@
 package eu.qwsome.sql;
 
+import eu.qwsome.sql.api.Appendable;
 import eu.qwsome.sql.condition.Condition;
 
 /**
@@ -7,7 +8,7 @@ import eu.qwsome.sql.condition.Condition;
  *
  * @author Lukáš Kvídera
  */
-abstract class Join {
+abstract class Join implements Appendable {
 
   /**
    * Table used in JOIN clause.
@@ -25,10 +26,22 @@ abstract class Join {
   }
 
   public CharSequence get() {
-    return getPrefix() + " JOIN " + this.joinTable + " ON " + this.condition.get();
+    final StringBuilder builder = new StringBuilder();
+    appendTo(builder);
+    return builder;
   }
 
   abstract CharSequence getPrefix();
+
+  @Override
+  public void appendTo(final StringBuilder builder) {
+    builder.append(getPrefix())
+      .append(" JOIN ")
+      .append(this.joinTable)
+      .append(" ON ");
+
+    this.condition.appendTo(builder);
+  }
 
 
   enum Type {

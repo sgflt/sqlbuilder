@@ -18,7 +18,18 @@ class Between implements Condition {
 
   @Override
   public CharSequence get() {
-    return this.field.getSql() + " BETWEEN " + this.from.getSql() + " AND " + this.to.getSql();
+    final StringBuilder builder = new StringBuilder();
+    appendTo(builder);
+    return builder;
+  }
+
+  @Override
+  public void appendTo(final StringBuilder builder) {
+    builder.append(this.field.getSql())
+      .append(" BETWEEN ")
+      .append(this.from.getSql())
+      .append(" AND ")
+      .append(this.to.getSql());
   }
 
   @Override
@@ -28,5 +39,4 @@ class Between implements Condition {
       .add(this.from)
       .add(this.to);
   }
-
 }
