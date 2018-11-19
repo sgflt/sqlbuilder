@@ -1,13 +1,11 @@
 package eu.qwsome.sql.condition;
 
-import eu.qwsome.sql.Column;
-
 /**
  * @author Lukáš Kvídera
  */
 class IsNotEqual extends BiCondition {
-  public IsNotEqual(final Column column, final Column another) {
-    super(column, another);
+  public IsNotEqual(final ValueHolder first, final ValueHolder second) {
+    super(first, second);
   }
 
   @Override
