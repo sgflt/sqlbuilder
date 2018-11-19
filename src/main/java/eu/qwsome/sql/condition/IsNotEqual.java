@@ -12,6 +12,6 @@ class IsNotEqual extends BiCondition {
 
   @Override
   String getOperator() {
-    return " < ";
+    return " <> ";
   }
 }
