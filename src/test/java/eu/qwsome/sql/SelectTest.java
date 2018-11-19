@@ -207,11 +207,12 @@ public class SelectTest {
             comparedField(column("z")).isEqualTo(value(32))
               .or(comparedField(column("w")).isGreaterThan(value(50)))
           )
+          .or(comparedField(column("a")).isNotEqualTo(value(55)))
       )
       .toValues();
 
-    assertThat(values.toArray()).isEqualTo(new Object[]{"x", 43, 28, 32, 50});
+    assertThat(values.toArray()).isEqualTo(new Object[]{"x", 43, 28, 32, 50, 55});
     assertThat(select.toSql())
-      .isEqualTo("SELECT * FROM table WHERE ((? BETWEEN c AND ? AND y = ?) AND (z = ? OR w > ?))");
+      .isEqualTo("SELECT * FROM table WHERE (((? BETWEEN c AND ? AND y = ?) AND (z = ? OR w > ?)) OR a <> ?)");
   }
 }
