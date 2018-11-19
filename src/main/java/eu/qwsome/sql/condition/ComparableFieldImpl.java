@@ -17,6 +17,11 @@ public class ComparableFieldImpl implements ComparableField {
   }
 
   @Override
+  public Condition isNotEqualTo(final ValueHolder another) {
+    return new IsNotEqual(this.comparedField, another);
+  }
+
+  @Override
   public Condition isBetween(final ValueHolder from, final ValueHolder to) {
     return new Between(this.comparedField, from, to);
   }
