@@ -15,6 +15,11 @@ public class ConditionBuilder implements Condition {
 
   private Condition root;
 
+  /**
+   * Creates a new instance of {@link ConditionBuilder}
+   *
+   * @return {@link ConditionBuilder}
+   */
   public static ConditionBuilder create() {
     return new ConditionBuilder();
   }

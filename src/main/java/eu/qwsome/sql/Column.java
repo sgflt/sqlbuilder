@@ -11,10 +11,20 @@ public class Column implements ValueHolder {
 
   private final String name;
 
+  /**
+   * Constructs column with a name.
+   *
+   * @param name of column
+   */
   private Column(final String name) {
     this.name = name;
   }
 
+  /**
+   * Constructs column with a name.
+   *
+   * @param name of column
+   */
   public static Column column(final String name) {
     return new Column(name);
   }

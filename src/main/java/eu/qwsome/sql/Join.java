@@ -31,6 +31,9 @@ abstract class Join implements Appendable {
     return builder;
   }
 
+  /**
+   * @return tyoe if join
+   */
   abstract CharSequence getPrefix();
 
   @Override
@@ -43,7 +46,9 @@ abstract class Join implements Appendable {
     this.condition.appendTo(builder);
   }
 
-
+  /**
+   * This enum determines type of join.
+   */
   enum Type {
     LEFT,
     INNER

@@ -37,5 +37,10 @@ public interface Condition extends Appendable {
     return new Or(this, another);
   }
 
+  /**
+   * Returns a {@link ValueConstructor} that contains bindable values
+   *
+   * @return {@link ValueConstructor}
+   */
   ValueConstructor getValues();
 }

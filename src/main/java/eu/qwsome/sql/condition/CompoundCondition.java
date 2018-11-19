@@ -1,6 +1,8 @@
 package eu.qwsome.sql.condition;
 
 /**
+ * This class represents composition of two conditions.
+ *
  * @author Lukáš Kvídera
  */
 abstract class CompoundCondition implements Condition {
