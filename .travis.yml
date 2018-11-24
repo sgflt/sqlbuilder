@@ -1,0 +1,9 @@
+language: java
+script: mvn install
+deploy:
+  provider: bintray
+  file: .bintray.json
+  user: $BINTRAY_USERNAME
+  key:
+    secure: $BINTRAY_API_KEY
+  skip_cleanup: true 
