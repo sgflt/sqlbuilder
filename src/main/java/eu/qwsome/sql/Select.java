@@ -85,6 +85,7 @@ public class Select {
    * SELECT column FROM table
    * }
    *
+   * @param column name that will be selected
    * @return select builder
    */
   public static Select select(final String column) {
@@ -144,8 +145,8 @@ public class Select {
       this.condition.appendTo(builder);
     }
 
-    if (orderBy != null) {
-      orderBy.appendTo(builder);
+    if (this.orderBy != null) {
+      this.orderBy.appendTo(builder);
     }
 
     return builder.toString();
@@ -228,6 +229,7 @@ public class Select {
   public class ConditionsBuiltPhase {
     /**
      * @see Select#toSql()
+     * @return generated SQL
      */
     public String toSql() {
       return Select.this.toSql();
@@ -289,6 +291,9 @@ public class Select {
   }
 
   public class OrderByPhase {
+    /**
+     * @return generated SQL
+     */
     public String toSql() {
       return Select.this.toSql();
     }

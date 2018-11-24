@@ -24,6 +24,7 @@ public class Column implements ValueHolder {
    * Constructs column with a name.
    *
    * @param name of column
+   * @return a {@link Column} instance
    */
   public static Column column(final String name) {
     return new Column(name);
