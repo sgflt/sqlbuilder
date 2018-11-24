@@ -4,7 +4,7 @@
 is a lightweight library that simplifies generating of SQL/JPQL/HQL.
 
 In opposite to jOOQ or DSLQuery this implementation is not dialect aware.
-What you write is what you get. There is no need to generate definitons of tables or similar things.
+What you write is what you get. There is no need to generate definitions of tables or similar things.
 
 Just add dependency and use.
 
