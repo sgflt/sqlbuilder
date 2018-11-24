@@ -1,5 +1,9 @@
 language: java
 script: mvn install
+before_deploy:
+  - mvn help:evaluate -N -Dexpression=project.version|grep -v '\['
+  - export project_version=$(mvn help:evaluate -N -Dexpression=project.version|grep -v '\[')
+  - sed -i "s/\$PROJECT_VERSION/$project_version/g" .bintray.json
 deploy:
   provider: bintray
   file: .bintray.json

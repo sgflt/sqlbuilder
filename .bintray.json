@@ -11,12 +11,15 @@
     },
 
     "version": {
-      "name": "0.0.1-beta"
+        "name": "$PROJECT_VERSION"
     },
 
     "files":
         [
-        {"includePattern": "target/(.*).jar", "uploadPattern": "target/$1.jar"}
+            {
+                "includePattern": "target/$PROJECT_VERSION.jar",
+                "uploadPattern": "target/$PROJECT_VERSION.jar"
+            }
         ],
     "publish": false
 }
