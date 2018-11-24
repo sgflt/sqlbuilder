@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.com/sgflt/sqlbuilder.svg?branch=master)](https://travis-ci.com/sgflt/sqlbuilder)
+
 # sqlbuilder
 is a leightweight library that simplifies generating of SQL/JPQL/HQL.
 
