@@ -17,7 +17,12 @@
     "files":
         [
             {
-                "uploadPattern": "target/sql-builder-$PROJECT_VERSION.jar"
+                "includePattern": "target/(.*).jar",
+                "uploadPattern": "target/$1.jar"
+            },
+            {
+                "includePattern": "./",
+                "uploadPattern": "pom.xml"
             }
         ],
     "publish": false
