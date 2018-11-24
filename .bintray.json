@@ -22,7 +22,7 @@
             },
             {
                 "includePattern": "./pom.xml",
-                "uploadPattern": "eu/qwsome/sql-builder/$PROJECT_VERSION/pom.xml"
+                "uploadPattern": "eu/qwsome/sql-builder/$PROJECT_VERSION/sql-builder-$PROJECT_VERSION.pom"
             }
         ],
     "publish": false
