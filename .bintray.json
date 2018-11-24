@@ -18,11 +18,11 @@
         [
             {
                 "includePattern": "target/(.*).jar",
-                "uploadPattern": "$1/$1.jar"
+                "uploadPattern": "eu/qwsome/sql-builder/$PROJECT_VERSION/$1.jar"
             },
             {
                 "includePattern": "./pom.xml",
-                "uploadPattern": "pom.xml"
+                "uploadPattern": "eu/qwsome/sql-builder/$PROJECT_VERSION/pom.xml"
             }
         ],
     "publish": false
