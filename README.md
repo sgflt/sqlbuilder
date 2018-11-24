@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.com/sgflt/sqlbuilder.svg?branch=master)](https://travis-ci.com/sgflt/sqlbuilder)
 
 # sqlbuilder
-is a leightweight library that simplifies generating of SQL/JPQL/HQL.
+is a lightweight library that simplifies generating of SQL/JPQL/HQL.
 
 In opposite to jOOQ or DSLQuery this implementation is not dialect aware.
 What you write is what you get. There is no need to generate definitons of tables or similar things.
