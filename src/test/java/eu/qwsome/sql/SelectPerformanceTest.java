@@ -1,5 +1,6 @@
 package eu.qwsome.sql;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
@@ -29,6 +30,7 @@ import static org.assertj.core.data.Offset.offset;
  * @implNote Tests may fail on different computers. At first measure performance on actual PC and
  * then you can refactor production code and compare results.
  */
+@Disabled("Travis-CI is much faster than local computer")
 public class SelectPerformanceTest {
 
 
