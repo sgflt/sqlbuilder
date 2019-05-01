@@ -50,4 +50,10 @@ public class ComparableFieldImpl implements ComparableField {
   public Condition isGreaterThan(final ValueHolder another) {
     return new IsGreaterThan(this.comparedField, another);
   }
+
+  @Override
+  public Condition isGreaterOrEqualThan(ValueHolder another) {
+    return null;
+  }
+
 }

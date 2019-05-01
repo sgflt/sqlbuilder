@@ -114,6 +114,15 @@ public class SelectTest {
   }
 
   @Test
+  public void testSelect_greaterOrEqualThanCondition(){
+    final String sql = select()
+            .from("table")
+            .where(comparedField(column("column1")).isGreaterOrEqualThan(column("column2")))
+            .toSql();
+    assertThat(sql).isEqualTo("SELECT * FROM table WHERE column1 >= column2");
+  }
+
+  @Test
   public void testAllVariants() {
     final String sql = select().from("table")
       .where(

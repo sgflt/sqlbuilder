@@ -42,6 +42,13 @@ public interface ComparableField {
   Condition isGreaterThan(final ValueHolder another);
 
   /**
+   * Returns a {@link Condition} with meaning this &gt;= another.
+   * @param another field to be compared
+   * @return {@link Condition}
+   */
+  Condition isGreaterOrEqualThan(final ValueHolder another);
+
+  /**
    * Returns a {@link Condition} with meaning from &lt;= this &lt;= to.
    *
    * @param from lower boundary
