@@ -37,6 +37,11 @@ public class ComparableFieldImpl implements ComparableField {
   }
 
   @Override
+  public Condition isLessOrEqualThan(ValueHolder another) {
+    return new IsLessOrEqualThan(this.comparedField, another);
+  }
+
+  @Override
   public Condition isNotNull() {
     return new IsNotNull(this.comparedField);
   }
@@ -45,4 +50,15 @@ public class ComparableFieldImpl implements ComparableField {
   public Condition isGreaterThan(final ValueHolder another) {
     return new IsGreaterThan(this.comparedField, another);
   }
+
+  @Override
+  public Condition isGreaterOrEqualThan(ValueHolder another) {
+    return new IsGreaterOrEqualThan(this.comparedField, another);
+  }
+
+  @Override
+  public Condition in(ValueHolder... another) {
+    return new In(this.comparedField, another);
+  }
+
 }
