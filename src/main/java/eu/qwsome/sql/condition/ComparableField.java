@@ -27,6 +27,13 @@ public interface ComparableField {
   Condition isLessThan(final ValueHolder another);
 
   /**
+   * Returns a {@link Condition} with meaning this &lt;= another.
+   * @param another field to be compared
+   * @return {@link Condition}
+   */
+  Condition isLessOrEqualThan(final ValueHolder another);
+
+  /**
    * Returns a {@link Condition} with meaning this &gt; another.
    *
    * @param another field to be compared
@@ -56,4 +63,5 @@ public interface ComparableField {
    * @return {@link Condition}
    */
   Condition isNotNull();
+
 }
