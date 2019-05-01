@@ -38,7 +38,7 @@ public class ComparableFieldImpl implements ComparableField {
 
   @Override
   public Condition isLessOrEqualThan(ValueHolder another) {
-    return null;
+    return new IsLessOrEqualThan(this.comparedField, another);
   }
 
   @Override
