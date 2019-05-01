@@ -48,6 +48,8 @@ public interface ComparableField {
    */
   Condition isGreaterOrEqualThan(final ValueHolder another);
 
+  Condition in(final ValueHolder... another);
+
   /**
    * Returns a {@link Condition} with meaning from &lt;= this &lt;= to.
    *
