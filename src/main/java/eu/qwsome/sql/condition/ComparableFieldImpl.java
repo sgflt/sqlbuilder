@@ -63,12 +63,12 @@ public class ComparableFieldImpl implements ComparableField {
 
   @Override
   public Condition like(ValueHolder pattern) {
-    return null;
+    return new Like(this.comparedField, pattern);
   }
 
   @Override
   public Condition notLike(ValueHolder pattern) {
-    return null;
+    return new NotLike(this.comparedField, pattern);
   }
 
 }
