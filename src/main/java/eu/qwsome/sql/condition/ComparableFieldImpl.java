@@ -61,4 +61,14 @@ public class ComparableFieldImpl implements ComparableField {
     return new In(this.comparedField, another);
   }
 
+  @Override
+  public Condition like(ValueHolder pattern) {
+    return new Like(this.comparedField, pattern);
+  }
+
+  @Override
+  public Condition notLike(ValueHolder pattern) {
+    return new NotLike(this.comparedField, pattern);
+  }
+
 }
