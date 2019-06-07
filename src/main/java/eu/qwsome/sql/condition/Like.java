@@ -11,6 +11,6 @@ public class Like extends BiCondition {
 
     @Override
     String getOperator() {
-        return " like ";
+        return " LIKE ";
     }
 }

@@ -147,7 +147,7 @@ public class SelectTest {
         .from("table")
         .where(comparedField(column("column1")).like(value("%some%pattern__%")))
         .toSql();
-    assertThat(sql).isEqualTo("SELECT * FROM table WHERE column1 like ?");
+    assertThat(sql).isEqualTo("SELECT * FROM table WHERE column1 LIKE ?");
   }
 
   @Test
@@ -156,7 +156,7 @@ public class SelectTest {
         .from("table")
         .where(comparedField(column("column1")).like(column("column2")))
         .toSql();
-    assertThat(sql).isEqualTo("SELECT * FROM table WHERE column1 like column2");
+    assertThat(sql).isEqualTo("SELECT * FROM table WHERE column1 LIKE column2");
   }
 
   @Test
@@ -165,7 +165,7 @@ public class SelectTest {
         .from("table")
         .where(comparedField(column("column1")).notLike(value("%some%pattern__%")))
         .toSql();
-    assertThat(sql).isEqualTo("SELECT * FROM table WHERE column1 not like ?");
+    assertThat(sql).isEqualTo("SELECT * FROM table WHERE column1 NOT LIKE ?");
   }
 
   @Test
@@ -174,7 +174,7 @@ public class SelectTest {
         .from("table")
         .where(comparedField(column("column1")).notLike(column("column2")))
         .toSql();
-    assertThat(sql).isEqualTo("SELECT * FROM table WHERE column1 not like column2");
+    assertThat(sql).isEqualTo("SELECT * FROM table WHERE column1 NOT LIKE column2");
   }
 
 
