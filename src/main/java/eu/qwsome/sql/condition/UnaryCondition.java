@@ -16,14 +16,6 @@ abstract class UnaryCondition implements Condition {
     return new ValueConstructor().add(this.field);
   }
 
-
-  @Override
-  public CharSequence get() {
-    final StringBuilder builder = new StringBuilder();
-    appendTo(builder);
-    return builder;
-  }
-
   @Override
   public void appendTo(final StringBuilder builder) {
     builder.append(this.field.getSql())

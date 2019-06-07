@@ -29,13 +29,6 @@ abstract class BiCondition implements Condition {
   }
 
   @Override
-  public CharSequence get() {
-    final StringBuilder builder = new StringBuilder();
-    appendTo(builder);
-    return builder;
-  }
-
-  @Override
   public void appendTo(final StringBuilder builder) {
     builder.append(this.first.getSql())
       .append(getOperator())

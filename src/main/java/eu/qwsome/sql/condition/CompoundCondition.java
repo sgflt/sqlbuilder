@@ -14,19 +14,6 @@ abstract class CompoundCondition implements Condition {
     this.second = second;
   }
 
-  /**
-   * Creates a string representation of actual conditions and wraps them int brackets to preserve meaning and precedence of
-   * logical operators.
-   *
-   * @return string representation of compound condition
-   */
-  @Override
-  public CharSequence get() {
-    final StringBuilder builder = new StringBuilder();
-    appendTo(builder);
-    return builder;
-  }
-
   @Override
   public ValueConstructor getValues() {
     return new ValueConstructor()

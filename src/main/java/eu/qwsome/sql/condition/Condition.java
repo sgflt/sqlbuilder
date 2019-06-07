@@ -15,7 +15,11 @@ public interface Condition extends Appendable {
    *
    * @return string representation
    */
-  CharSequence get();
+  default CharSequence get() {
+    final StringBuilder builder = new StringBuilder();
+    appendTo(builder);
+    return builder;
+  }
 
   /**
    * Returns compound condition as a logical AND.
@@ -36,6 +40,13 @@ public interface Condition extends Appendable {
   default Condition or(final Condition another) {
     return new Or(this, another);
   }
+
+  /**
+   * Returns negation of this condition.
+   *
+   * @return NOT this
+   */
+  default Condition not() { return new Not(this); }
 
   /**
    * Returns a {@link ValueConstructor} that contains bindable values
