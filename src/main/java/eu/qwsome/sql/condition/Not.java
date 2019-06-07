@@ -9,13 +9,6 @@ public class Not implements Condition {
     }
 
     @Override
-    public CharSequence get() {
-        StringBuilder builder = new StringBuilder();
-        appendTo(builder);
-        return builder;
-    }
-
-    @Override
     public ValueConstructor getValues() {
         return this.condition.getValues();
     }

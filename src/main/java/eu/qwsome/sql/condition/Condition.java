@@ -15,7 +15,11 @@ public interface Condition extends Appendable {
    *
    * @return string representation
    */
-  CharSequence get();
+  default CharSequence get() {
+    final StringBuilder builder = new StringBuilder();
+    appendTo(builder);
+    return builder;
+  }
 
   /**
    * Returns compound condition as a logical AND.
