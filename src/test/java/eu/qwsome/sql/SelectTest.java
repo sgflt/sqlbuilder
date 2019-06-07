@@ -142,6 +142,43 @@ public class SelectTest {
   }
 
   @Test
+  public void testSelect_likeConditionLiterals(){
+    final String sql = select()
+        .from("table")
+        .where(comparedField(column("column1")).like(value("%some%pattern__%")))
+        .toSql();
+    assertThat(sql).isEqualTo("SELECT * FROM table WHERE column1 like ?");
+  }
+
+  @Test
+  public void testSelect_likeConditionColumn(){
+    final String sql = select()
+        .from("table")
+        .where(comparedField(column("column1")).like(column("column2")))
+        .toSql();
+    assertThat(sql).isEqualTo("SELECT * FROM table WHERE column1 like column2");
+  }
+
+  @Test
+  public void testSelect_notLikeConditionLiterals(){
+    final String sql = select()
+        .from("table")
+        .where(comparedField(column("column1")).notLike(value("%some%pattern__%")))
+        .toSql();
+    assertThat(sql).isEqualTo("SELECT * FROM table WHERE column1 not like ?");
+  }
+
+  @Test
+  public void testSelect_notLikeConditionColumn(){
+    final String sql = select()
+        .from("table")
+        .where(comparedField(column("column1")).notLike(column("column2")))
+        .toSql();
+    assertThat(sql).isEqualTo("SELECT * FROM table WHERE column1 not like column2");
+  }
+
+
+  @Test
   public void testAllVariants() {
     final String sql = select().from("table")
       .where(

@@ -1,5 +1,6 @@
 package eu.qwsome.sql.condition;
 
+
 public interface ComparableField {
 
   /**
@@ -49,6 +50,10 @@ public interface ComparableField {
   Condition isGreaterOrEqualThan(final ValueHolder another);
 
   Condition in(final ValueHolder... another);
+
+  Condition like(final ValueHolder pattern);
+
+  Condition notLike(final ValueHolder pattern);
 
   /**
    * Returns a {@link Condition} with meaning from &lt;= this &lt;= to.
