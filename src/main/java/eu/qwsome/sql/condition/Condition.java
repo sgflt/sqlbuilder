@@ -42,7 +42,7 @@ public interface Condition extends Appendable {
    *
    * @return NOT this
    */
-  default Condition not() { return null; }
+  default Condition not() { return new Not(this); }
 
   /**
    * Returns a {@link ValueConstructor} that contains bindable values
