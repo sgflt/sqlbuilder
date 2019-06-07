@@ -37,6 +37,12 @@ public class SelectTest {
   }
 
   @Test
+  public void testSimpleSelect_SingleNegatedCondition() {
+    final String sql = select().from("table").where(comparedField(column("column1")).isEqualTo(column("column2")).not()).toSql();
+    assertThat(sql).isEqualTo("SELECT * FROM table WHERE NOT column1 = column2");
+  }
+
+  @Test
   public void testWithColumn_SingleCondition() {
     final String sql = select("column42").from("table").where(comparedField(column("column1")).isEqualTo(column("column2"))).toSql();
     assertThat(sql).isEqualTo("SELECT column42 FROM table WHERE column1 = column2");
@@ -59,6 +65,18 @@ public class SelectTest {
       ).toSql();
 
     assertThat(sql).isEqualTo("SELECT * FROM table WHERE (column1 = column2 AND column4 = column5)");
+  }
+
+  @Test
+  public void testSimpleSelect_MultipleNegatedConditions() {
+    final String sql = select().from("table")
+        .where(
+               comparedField(column("column1")).isEqualTo(column("column2")).not()
+          .and(comparedField(column("column1")).isNotNull())
+          .and(comparedField(column("column4")).isEqualTo(column("column5")).not())
+        ).toSql();
+
+    assertThat(sql).isEqualTo("SELECT * FROM table WHERE ((NOT column1 = column2 AND column1 IS NOT NULL) AND NOT column4 = column5)");
   }
 
   @Test

@@ -38,6 +38,13 @@ public interface Condition extends Appendable {
   }
 
   /**
+   * Returns negation of this condition.
+   *
+   * @return NOT this
+   */
+  default Condition not() { return null; }
+
+  /**
    * Returns a {@link ValueConstructor} that contains bindable values
    *
    * @return {@link ValueConstructor}
