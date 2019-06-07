@@ -1,5 +1,8 @@
 package eu.qwsome.sql.condition;
 
+/**
+ * @author Martin Procházka
+ */
 public class NotLike extends BiCondition {
 
     NotLike(ValueHolder first, ValueHolder second) {
