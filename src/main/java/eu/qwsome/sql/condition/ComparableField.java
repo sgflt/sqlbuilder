@@ -1,5 +1,6 @@
 package eu.qwsome.sql.condition;
 
+
 public interface ComparableField {
 
   /**
@@ -48,7 +49,31 @@ public interface ComparableField {
    */
   Condition isGreaterOrEqualThan(final ValueHolder another);
 
+  /**
+   * Returns a {@link Condition} checking containment of this in
+   * a set of another values.
+   *
+   * @param another the set of values for comparison
+   * @return {@link Condition}
+   */
   Condition in(final ValueHolder... another);
+
+  /**
+   * Returns a {@link Condition} checking if this matches a pattern.
+   *
+   * @param pattern to be matched
+   * @return {@link Condition}
+   */
+  Condition like(final ValueHolder pattern);
+
+  /**
+   * Returns a {@link Condition} checking if this does not match a pattern
+   * (this is complementary condition to {@link #like(ValueHolder)}).
+   *
+   * @param pattern to not be matched
+   * @return {@link Condition}
+   */
+  Condition notLike(final ValueHolder pattern);
 
   /**
    * Returns a {@link Condition} with meaning from &lt;= this &lt;= to.
