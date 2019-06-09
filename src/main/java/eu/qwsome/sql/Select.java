@@ -15,6 +15,11 @@ import java.util.List;
 public class Select {
 
   /**
+   * True if SELECT DISTINCT shall be used
+   */
+  private boolean distinct;
+
+  /**
    * Table in clause FROM.
    */
   private String sourceTable;
@@ -112,6 +117,16 @@ public class Select {
   }
 
   /**
+   * This method enables use of distinction.
+   *
+   * @return select with enabled distinction
+   */
+  public Select distinct(){
+    this.distinct = true;
+    return this;
+  }
+
+  /**
    * This method sets a source table for select.
    *
    * @param table to be used in FROM clause
@@ -130,6 +145,7 @@ public class Select {
   public String toSql() {
     final StringBuilder builder = new StringBuilder();
     builder.append("SELECT ")
+      .append(this.distinct ? "DISTINCT " : "")
       .append(getColumns())
       .append(" FROM ")
       .append(this.sourceTable);
