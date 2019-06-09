@@ -31,6 +31,24 @@ public class SelectTest {
   }
 
   @Test
+  public void testSimpleSelectDistinct() {
+    final String sql = select().distinct().from("table").toSql();
+    assertThat(sql).isEqualTo("SELECT DISTINCT * FROM table");
+  }
+
+  @Test
+  public void testSelectDistinctWithColumn() {
+    final String sql = select("column1").distinct().from("table").toSql();
+    assertThat(sql).isEqualTo("SELECT DISTINCT column1 FROM table");
+  }
+
+  @Test
+  public void testSelectDistinctWithColumns() {
+    final String sql = select("column1", "column2").distinct().from("table").toSql();
+    assertThat(sql).isEqualTo("SELECT DISTINCT column1,column2 FROM table");
+  }
+
+  @Test
   public void testSimpleSelect_SingleCondition() {
     final String sql = select().from("table").where(comparedField(column("column1")).isEqualTo(column("column2"))).toSql();
     assertThat(sql).isEqualTo("SELECT * FROM table WHERE column1 = column2");
