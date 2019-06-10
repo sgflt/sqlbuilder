@@ -2,6 +2,7 @@ package eu.qwsome.sql;
 
 import eu.qwsome.sql.condition.Condition;
 import eu.qwsome.sql.condition.ValueConstructor;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static eu.qwsome.sql.Column.column;
@@ -9,6 +10,7 @@ import static eu.qwsome.sql.Select.select;
 import static eu.qwsome.sql.ValueLiteral.value;
 import static eu.qwsome.sql.condition.FieldComparator.comparedField;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SelectTest {
 
@@ -324,5 +326,22 @@ public class SelectTest {
     assertThat(values.toArray()).isEqualTo(new Object[]{"x", 43, 28, 32, 50, 55});
     assertThat(select.toSql())
       .isEqualTo("SELECT * FROM table WHERE (((? BETWEEN c AND ? AND y = ?) AND (z = ? OR w > ?)) OR a <> ?)");
+  }
+
+  @Test
+  public void testNestedSelectAfterWhere() {
+    final String sql = select().from(
+        select("col1", "col2").from("table")
+            .where(comparedField(column("col3")).isEqualTo(value("qqq"))),
+        "a"
+    ).where(
+        comparedField(column("col1", "a")).in(value("whatever"), value("another"), value("value"))
+        .and(comparedField(value(2)).isGreaterThan(value(0)))
+    ).orderBy(column("col1", "a")).toSql();
+
+    assertEquals(
+        sql,
+        "SELECT * FROM ( SELECT col1, col2 FROM table WHERE col3 = ? ) AS a WHERE ( a.col1 IN ( ?, ?, ? ) AND ? > ? ) ORDER BY a.col1"
+    );
   }
 }

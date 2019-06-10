@@ -2,6 +2,7 @@ package eu.qwsome.sql;
 
 import eu.qwsome.sql.condition.ValueHolder;
 
+
 /**
  * This class represents a column in a database table.
  *
@@ -28,6 +29,16 @@ public class Column implements ValueHolder {
    */
   public static Column column(final String name) {
     return new Column(name);
+  }
+
+  /**
+   * Constructs column with name and source.
+   *
+   * @param name of column
+   * @param source source of the column
+   */
+  public static Column column(final String name, final String source){
+    return new Column(source.concat(".").concat(name));
   }
 
   @Override
