@@ -37,7 +37,7 @@ class ConditionBuilderTest {
       .and(comparedField(value(4)).isEqualTo(column("c1")))
       .and(comparedField(column("b2")).isEqualTo(column("c2")));
 
-    assertThat(builder.get().toString()).isEqualTo("(? = c1 AND b2 = c2)");
+    assertThat(builder.get().toString()).isEqualTo("( ? = c1 AND b2 = c2 )");
   }
 
   @Test
@@ -59,7 +59,7 @@ class ConditionBuilderTest {
       .or(comparedField(value(4)).isEqualTo(column("c1")))
       .or(comparedField(column("b2")).isEqualTo(column("c2")));
 
-    assertThat(builder.get().toString()).isEqualTo("(? = c1 OR b2 = c2)");
+    assertThat(builder.get().toString()).isEqualTo("( ? = c1 OR b2 = c2 )");
   }
 
 
@@ -71,7 +71,7 @@ class ConditionBuilderTest {
       .and(comparedField(column("b3")).isEqualTo(column("c3")))
       .or(comparedField(column("b4")).isEqualTo(column("c4")));
 
-    assertThat(builder.get().toString()).isEqualTo("(((? = c1 AND b2 = c2) AND b3 = c3) OR b4 = c4)");
+    assertThat(builder.get().toString()).isEqualTo("( ( ( ? = c1 AND b2 = c2 ) AND b3 = c3 ) OR b4 = c4 )");
   }
 
   @Test
