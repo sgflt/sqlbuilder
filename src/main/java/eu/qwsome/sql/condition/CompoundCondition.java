@@ -23,11 +23,11 @@ abstract class CompoundCondition implements Condition {
 
   @Override
   public void appendTo(final StringBuilder builder) {
-    builder.append('(');
+    builder.append("( ");
     this.first.appendTo(builder);
     builder.append(getOperator());
     this.second.appendTo(builder);
-    builder.append(')');
+    builder.append(" )");
   }
 
   /**

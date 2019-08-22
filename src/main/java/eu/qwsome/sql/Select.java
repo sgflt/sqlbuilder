@@ -12,7 +12,7 @@ import java.util.List;
  * This class simplifies dynamic sql generation.
  * @author Lukáš Kvídera
  */
-public class Select {
+public class Select implements Query {
 
   /**
    * True if SELECT DISTINCT shall be used
@@ -20,9 +20,9 @@ public class Select {
   private boolean distinct;
 
   /**
-   * Table in clause FROM.
+   * Datasource after FROM (might be table or sub-query).
    */
-  private String sourceTable;
+  private String source;
 
   /**
    * List of columns that will be selected.
@@ -133,22 +133,40 @@ public class Select {
    * @return next phase that allows only relevant methods
    */
   public TableSelectedPhase from(final String table) {
-    this.sourceTable = table;
+    this.source = table;
     return new TableSelectedPhase();
   }
+
+  /**
+   * This method sets a source source sub-query for select.
+   *
+   * @param subquery source sub-query
+   * @param alias alias of the sub-query
+   * @return next selection phase
+   */
+  public TableSelectedPhase from(final Query subquery, final String alias){
+    this.source = "( "
+        .concat(subquery.toSql())
+        .concat(" ) AS ")
+        .concat(alias);
+
+    return new TableSelectedPhase();
+  }
+
 
   /**
    * Generates final SQL.
    *
    * @return generated SQL
    */
+  @Override
   public String toSql() {
     final StringBuilder builder = new StringBuilder();
     builder.append("SELECT ")
       .append(this.distinct ? "DISTINCT " : "")
       .append(getColumns())
       .append(" FROM ")
-      .append(this.sourceTable);
+      .append(this.source);
 
     if (!this.joins.isEmpty()) {
       for (final Join join : this.joins) {
@@ -185,14 +203,15 @@ public class Select {
    * @return list of columns usable in SQL
    */
   private String getColumns() {
-    return String.join(",", this.columns);
+    return String.join(", ", this.columns);
   }
 
 
-  public class TableSelectedPhase {
+  public class TableSelectedPhase implements Query {
     /**
      * @see Select#toSql()
      */
+    @Override
     public String toSql() {
       return Select.this.toSql();
     }
@@ -242,11 +261,12 @@ public class Select {
   /**
    * Final phase.
    */
-  public class ConditionsBuiltPhase {
+  public class ConditionsBuiltPhase implements Query {
     /**
      * @see Select#toSql()
      * @return generated SQL
      */
+    @Override
     public String toSql() {
       return Select.this.toSql();
     }
@@ -306,10 +326,11 @@ public class Select {
 
   }
 
-  public class OrderByPhase {
+  public class OrderByPhase implements Query {
     /**
      * @return generated SQL
      */
+    @Override
     public String toSql() {
       return Select.this.toSql();
     }

@@ -31,7 +31,7 @@ public class In implements Condition {
   @Override
   public void appendTo(StringBuilder builder) {
     builder.append(this.field.getSql())
-      .append(" in ")
+      .append(" IN ")
       .append("( ");
 
     int i = 0;
