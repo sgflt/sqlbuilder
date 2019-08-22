@@ -2,6 +2,7 @@ package eu.qwsome.sql;
 
 import eu.qwsome.sql.condition.Condition;
 import eu.qwsome.sql.condition.ValueConstructor;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static eu.qwsome.sql.Column.column;
@@ -9,6 +10,7 @@ import static eu.qwsome.sql.Select.select;
 import static eu.qwsome.sql.ValueLiteral.value;
 import static eu.qwsome.sql.condition.FieldComparator.comparedField;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class SelectTest {
 
@@ -27,7 +29,7 @@ public class SelectTest {
   @Test
   public void testSelectWithColumns() {
     final String sql = select("column1", "column2").from("table").toSql();
-    assertThat(sql).isEqualTo("SELECT column1,column2 FROM table");
+    assertThat(sql).isEqualTo("SELECT column1, column2 FROM table");
   }
 
   @Test
@@ -45,7 +47,7 @@ public class SelectTest {
   @Test
   public void testSelectDistinctWithColumns() {
     final String sql = select("column1", "column2").distinct().from("table").toSql();
-    assertThat(sql).isEqualTo("SELECT DISTINCT column1,column2 FROM table");
+    assertThat(sql).isEqualTo("SELECT DISTINCT column1, column2 FROM table");
   }
 
   @Test
@@ -71,7 +73,7 @@ public class SelectTest {
     final String sql = select("column42", "column49").from("table")
       .where(comparedField(column("column1")).isEqualTo(column("column2"))).toSql();
 
-    assertThat(sql).isEqualTo("SELECT column42,column49 FROM table WHERE column1 = column2");
+    assertThat(sql).isEqualTo("SELECT column42, column49 FROM table WHERE column1 = column2");
   }
 
   @Test
@@ -82,7 +84,7 @@ public class SelectTest {
           .and(comparedField(column("column4")).isEqualTo(column("column5")))
       ).toSql();
 
-    assertThat(sql).isEqualTo("SELECT * FROM table WHERE (column1 = column2 AND column4 = column5)");
+    assertThat(sql).isEqualTo("SELECT * FROM table WHERE ( column1 = column2 AND column4 = column5 )");
   }
 
   @Test
@@ -94,7 +96,7 @@ public class SelectTest {
           .and(comparedField(column("column4")).isEqualTo(column("column5")).not())
         ).toSql();
 
-    assertThat(sql).isEqualTo("SELECT * FROM table WHERE ((NOT column1 = column2 AND column1 IS NOT NULL) AND NOT column4 = column5)");
+    assertThat(sql).isEqualTo("SELECT * FROM table WHERE ( ( NOT column1 = column2 AND column1 IS NOT NULL ) AND NOT column4 = column5 )");
   }
 
   @Test
@@ -105,7 +107,7 @@ public class SelectTest {
           .and(comparedField(column("column4")).isEqualTo(column("column5")))
       ).toSql();
 
-    assertThat(sql).isEqualTo("SELECT column42 FROM table WHERE (column1 = column2 AND column4 = column5)");
+    assertThat(sql).isEqualTo("SELECT column42 FROM table WHERE ( column1 = column2 AND column4 = column5 )");
   }
 
   @Test
@@ -116,7 +118,7 @@ public class SelectTest {
           .and(comparedField(column("column4")).isEqualTo(column("column5")))
       ).toSql();
 
-    assertThat(sql).isEqualTo("SELECT column42,column49 FROM table WHERE (column1 = column2 AND column4 = column5)");
+    assertThat(sql).isEqualTo("SELECT column42, column49 FROM table WHERE ( column1 = column2 AND column4 = column5 )");
   }
 
   @Test
@@ -137,7 +139,7 @@ public class SelectTest {
       )
       .toSql();
 
-    assertThat(sql).isEqualTo("SELECT * FROM table WHERE (x BETWEEN from AND to OR y IS NULL)");
+    assertThat(sql).isEqualTo("SELECT * FROM table WHERE ( x BETWEEN from AND to OR y IS NULL )");
   }
 
   @Test
@@ -165,7 +167,7 @@ public class SelectTest {
             .where(comparedField(column("column1"))
                 .in(value("val1"), value("val2"), value("val3")))
             .toSql();
-    assertThat(sql).isEqualTo("SELECT * FROM table WHERE column1 in ( ?, ?, ? )");
+    assertThat(sql).isEqualTo("SELECT * FROM table WHERE column1 IN ( ?, ?, ? )");
   }
 
   @Test
@@ -174,7 +176,7 @@ public class SelectTest {
         .from("table")
         .where(comparedField(column("column1")).in(column("column2")))
         .toSql();
-    assertThat(sql).isEqualTo("SELECT * FROM table WHERE column1 in ( column2 )");
+    assertThat(sql).isEqualTo("SELECT * FROM table WHERE column1 IN ( column2 )");
   }
 
   @Test
@@ -229,7 +231,7 @@ public class SelectTest {
           )).toSql();
 
     assertThat(sql).isEqualTo("SELECT * FROM table WHERE " +
-      "(((y1 IS NULL AND x BETWEEN from AND to) OR y IS NULL) OR ((a IS NOT NULL AND b < x) AND c > x))");
+      "( ( ( y1 IS NULL AND x BETWEEN from AND to ) OR y IS NULL ) OR ( ( a IS NOT NULL AND b < x ) AND c > x ) )");
   }
 
 
@@ -260,8 +262,8 @@ public class SelectTest {
     final String sql = select().from("table")
       .where(conditionRoot)
       .toSql();
-    assertThat(sql).isEqualTo("SELECT * FROM table WHERE ((((((((((xxx = yyy AND 0 = 1) AND 1 = 2) AND 2 = 3)" +
-      " AND 3 = 4) AND 4 = 5) AND 5 = 6) AND 6 = 7) AND 7 = 8) AND 8 = 9) AND 9 = 10)");
+    assertThat(sql).isEqualTo("SELECT * FROM table WHERE ( ( ( ( ( ( ( ( ( ( xxx = yyy AND 0 = 1 ) AND 1 = 2 ) AND 2 = 3 )" +
+      " AND 3 = 4 ) AND 4 = 5 ) AND 5 = 6 ) AND 6 = 7 ) AND 7 = 8 ) AND 8 = 9 ) AND 9 = 10 )");
   }
 
   @Test
@@ -323,6 +325,23 @@ public class SelectTest {
 
     assertThat(values.toArray()).isEqualTo(new Object[]{"x", 43, 28, 32, 50, 55});
     assertThat(select.toSql())
-      .isEqualTo("SELECT * FROM table WHERE (((? BETWEEN c AND ? AND y = ?) AND (z = ? OR w > ?)) OR a <> ?)");
+      .isEqualTo("SELECT * FROM table WHERE ( ( ( ? BETWEEN c AND ? AND y = ? ) AND ( z = ? OR w > ? ) ) OR a <> ? )");
+  }
+
+  @Test
+  public void testNestedSelectAfterWhere() {
+    final String sql = select().from(
+        select("col1", "col2").from("table")
+            .where(comparedField(column("col3")).isEqualTo(value("qqq"))),
+        "a"
+    ).where(
+        comparedField(column("col1", "a")).in(value("whatever"), value("another"), value("value"))
+        .and(comparedField(value(2)).isGreaterThan(value(0)))
+    ).orderBy(column("col1", "a")).toSql();
+
+    assertEquals(
+        sql,
+        "SELECT * FROM ( SELECT col1, col2 FROM table WHERE col3 = ? ) AS a WHERE ( a.col1 IN ( ?, ?, ? ) AND ? > ? ) ORDER BY a.col1"
+    );
   }
 }
