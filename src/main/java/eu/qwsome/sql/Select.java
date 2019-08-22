@@ -10,6 +10,7 @@ import java.util.List;
 
 /**
  * This class simplifies dynamic sql generation.
+ *
  * @author Lukáš Kvídera
  */
 public class Select implements Query {
@@ -121,7 +122,7 @@ public class Select implements Query {
    *
    * @return select with enabled distinction
    */
-  public Select distinct(){
+  public Select distinct() {
     this.distinct = true;
     return this;
   }
@@ -141,14 +142,14 @@ public class Select implements Query {
    * This method sets a source source sub-query for select.
    *
    * @param subquery source sub-query
-   * @param alias alias of the sub-query
+   * @param alias    alias of the sub-query
    * @return next selection phase
    */
-  public TableSelectedPhase from(final Query subquery, final String alias){
+  public TableSelectedPhase from(final Query subquery, final String alias) {
     this.source = "( "
-        .concat(subquery.toSql())
-        .concat(" ) AS ")
-        .concat(alias);
+      .concat(subquery.toSql())
+      .concat(" ) AS ")
+      .concat(alias);
 
     return new TableSelectedPhase();
   }
@@ -263,8 +264,8 @@ public class Select implements Query {
    */
   public class ConditionsBuiltPhase implements Query {
     /**
-     * @see Select#toSql()
      * @return generated SQL
+     * @see Select#toSql()
      */
     @Override
     public String toSql() {

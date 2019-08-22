@@ -32,13 +32,13 @@ public class Column implements ValueHolder {
   }
 
   /**
-   * Constructs column with name and source.
+   * Constructs column with name and sourceTableAlias.
    *
-   * @param name of column
-   * @param source source of the column
+   * @param name             of column
+   * @param sourceTableAlias alias of table to which the column belongs
    */
-  public static Column column(final String name, final String source){
-    return new Column(source.concat(".").concat(name));
+  public static Column column(final String sourceTableAlias, final String name) {
+    return new Column(sourceTableAlias.concat(".").concat(name));
   }
 
   @Override
