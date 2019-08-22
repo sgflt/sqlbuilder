@@ -262,7 +262,7 @@ public class Select implements Query {
   /**
    * Final phase.
    */
-  public class ConditionsBuiltPhase implements Query {
+  public class ConditionsBuiltPhase implements ValueBinding {
     /**
      * @return generated SQL
      * @see Select#toSql()
@@ -272,6 +272,7 @@ public class Select implements Query {
       return Select.this.toSql();
     }
 
+    @Override
     public ValueConstructor toValues() {
       return Select.this.condition.getValues();
     }
@@ -327,13 +328,21 @@ public class Select implements Query {
 
   }
 
-  public class OrderByPhase implements Query {
+  public class OrderByPhase implements ValueBinding {
     /**
      * @return generated SQL
      */
     @Override
     public String toSql() {
       return Select.this.toSql();
+    }
+
+    @Override
+    public ValueConstructor toValues() {
+      if (Select.this.condition == null) {
+        return new ValueConstructor();
+      }
+      return Select.this.condition.getValues();
     }
   }
 }

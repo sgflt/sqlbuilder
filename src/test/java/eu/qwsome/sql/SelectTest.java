@@ -2,7 +2,6 @@ package eu.qwsome.sql;
 
 import eu.qwsome.sql.condition.Condition;
 import eu.qwsome.sql.condition.ValueConstructor;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static eu.qwsome.sql.Column.column;
@@ -90,11 +89,11 @@ public class SelectTest {
   @Test
   public void testSimpleSelect_MultipleNegatedConditions() {
     final String sql = select().from("table")
-        .where(
-               comparedField(column("column1")).isEqualTo(column("column2")).not()
+      .where(
+        comparedField(column("column1")).isEqualTo(column("column2")).not()
           .and(comparedField(column("column1")).isNotNull())
           .and(comparedField(column("column4")).isEqualTo(column("column5")).not())
-        ).toSql();
+      ).toSql();
 
     assertThat(sql).isEqualTo("SELECT * FROM table WHERE ( ( NOT column1 = column2 AND column1 IS NOT NULL ) AND NOT column4 = column5 )");
   }
@@ -143,75 +142,75 @@ public class SelectTest {
   }
 
   @Test
-  public void testSelect_lessOrEqualThanCondition(){
+  public void testSelect_lessOrEqualThanCondition() {
     final String sql = select()
-            .from("table")
-            .where(comparedField(column("column1")).isLessOrEqualThan(column("column2")))
-            .toSql();
+      .from("table")
+      .where(comparedField(column("column1")).isLessOrEqualThan(column("column2")))
+      .toSql();
     assertThat(sql).isEqualTo("SELECT * FROM table WHERE column1 <= column2");
   }
 
   @Test
-  public void testSelect_greaterOrEqualThanCondition(){
+  public void testSelect_greaterOrEqualThanCondition() {
     final String sql = select()
-            .from("table")
-            .where(comparedField(column("column1")).isGreaterOrEqualThan(column("column2")))
-            .toSql();
+      .from("table")
+      .where(comparedField(column("column1")).isGreaterOrEqualThan(column("column2")))
+      .toSql();
     assertThat(sql).isEqualTo("SELECT * FROM table WHERE column1 >= column2");
   }
 
   @Test
-  public void testSelect_inConditionLiterals(){
+  public void testSelect_inConditionLiterals() {
     final String sql = select()
-            .from("table")
-            .where(comparedField(column("column1"))
-                .in(value("val1"), value("val2"), value("val3")))
-            .toSql();
+      .from("table")
+      .where(comparedField(column("column1"))
+        .in(value("val1"), value("val2"), value("val3")))
+      .toSql();
     assertThat(sql).isEqualTo("SELECT * FROM table WHERE column1 IN ( ?, ?, ? )");
   }
 
   @Test
-  public void testSelect_inConditionColumn(){
+  public void testSelect_inConditionColumn() {
     final String sql = select()
-        .from("table")
-        .where(comparedField(column("column1")).in(column("column2")))
-        .toSql();
+      .from("table")
+      .where(comparedField(column("column1")).in(column("column2")))
+      .toSql();
     assertThat(sql).isEqualTo("SELECT * FROM table WHERE column1 IN ( column2 )");
   }
 
   @Test
-  public void testSelect_likeConditionLiterals(){
+  public void testSelect_likeConditionLiterals() {
     final String sql = select()
-        .from("table")
-        .where(comparedField(column("column1")).like(value("%some%pattern__%")))
-        .toSql();
+      .from("table")
+      .where(comparedField(column("column1")).like(value("%some%pattern__%")))
+      .toSql();
     assertThat(sql).isEqualTo("SELECT * FROM table WHERE column1 LIKE ?");
   }
 
   @Test
-  public void testSelect_likeConditionColumn(){
+  public void testSelect_likeConditionColumn() {
     final String sql = select()
-        .from("table")
-        .where(comparedField(column("column1")).like(column("column2")))
-        .toSql();
+      .from("table")
+      .where(comparedField(column("column1")).like(column("column2")))
+      .toSql();
     assertThat(sql).isEqualTo("SELECT * FROM table WHERE column1 LIKE column2");
   }
 
   @Test
-  public void testSelect_notLikeConditionLiterals(){
+  public void testSelect_notLikeConditionLiterals() {
     final String sql = select()
-        .from("table")
-        .where(comparedField(column("column1")).notLike(value("%some%pattern__%")))
-        .toSql();
+      .from("table")
+      .where(comparedField(column("column1")).notLike(value("%some%pattern__%")))
+      .toSql();
     assertThat(sql).isEqualTo("SELECT * FROM table WHERE column1 NOT LIKE ?");
   }
 
   @Test
-  public void testSelect_notLikeConditionColumn(){
+  public void testSelect_notLikeConditionColumn() {
     final String sql = select()
-        .from("table")
-        .where(comparedField(column("column1")).notLike(column("column2")))
-        .toSql();
+      .from("table")
+      .where(comparedField(column("column1")).notLike(column("column2")))
+      .toSql();
     assertThat(sql).isEqualTo("SELECT * FROM table WHERE column1 NOT LIKE column2");
   }
 
@@ -330,18 +329,22 @@ public class SelectTest {
 
   @Test
   public void testNestedSelectAfterWhere() {
-    final String sql = select().from(
-        select("col1", "col2").from("table")
-            .where(comparedField(column("col3")).isEqualTo(value("qqq"))),
-        "a"
+    final ValueBinding binding = select().from(
+      select("col1", "col2").from("table")
+        .where(comparedField(column("col3")).isEqualTo(value("qqq"))),
+      "a"
     ).where(
-        comparedField(column("col1", "a")).in(value("whatever"), value("another"), value("value"))
+      comparedField(column("a", "col1")).in(value("whatever"), value("another"), value("value"))
         .and(comparedField(value(2)).isGreaterThan(value(0)))
-    ).orderBy(column("col1", "a")).toSql();
+    ).orderBy(column("a", "col1"));
+    final String sql = binding.toSql();
 
     assertEquals(
-        sql,
-        "SELECT * FROM ( SELECT col1, col2 FROM table WHERE col3 = ? ) AS a WHERE ( a.col1 IN ( ?, ?, ? ) AND ? > ? ) ORDER BY a.col1"
+      sql,
+      "SELECT * FROM ( SELECT col1, col2 FROM table WHERE col3 = ? ) AS a WHERE ( a.col1 IN ( ?, ?, ? ) AND ? > ? ) ORDER BY a.col1"
     );
+
+    final ValueConstructor values = binding.toValues();
+    assertThat(values).hasSize(5);
   }
 }
