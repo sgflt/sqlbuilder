@@ -19,6 +19,15 @@ class ConditionBuilderTest {
   }
 
   @Test
+  void emptyBuild() {
+    assertThat(ConditionBuilder.create().getValues()).isEmpty();
+
+    final StringBuilder builder = new StringBuilder();
+    ConditionBuilder.create().appendTo(builder);
+    assertThat(builder).isEmpty();
+  }
+
+  @Test
   void and() {
     final ConditionBuilder builder = ConditionBuilder.create()
       .and(comparedField(value(4)).isEqualTo(column("c1")));

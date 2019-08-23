@@ -57,11 +57,13 @@ public class ConditionBuilder implements Condition {
 
   @Override
   public void appendTo(final StringBuilder builder) {
-    this.root.appendTo(builder);
+    if (this.root != null) {
+      this.root.appendTo(builder);
+    }
   }
 
   @Override
   public ValueConstructor getValues() {
-    return this.root.getValues();
+    return this.root == null ? new ValueConstructor() : this.root.getValues();
   }
 }
