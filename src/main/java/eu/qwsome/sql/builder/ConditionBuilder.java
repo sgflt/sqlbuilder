@@ -2,7 +2,6 @@ package eu.qwsome.sql.builder;
 
 
 import eu.qwsome.sql.condition.Condition;
-import eu.qwsome.sql.condition.ValueConstructor;
 
 import java.util.Objects;
 
@@ -11,7 +10,7 @@ import java.util.Objects;
  *
  * @author Lukáš Kvídera
  */
-public class ConditionBuilder implements Condition {
+public class ConditionBuilder {
 
   private Condition root;
 
@@ -30,7 +29,6 @@ public class ConditionBuilder implements Condition {
    * @param another condition to be composed
    * @return this builder
    */
-  @Override
   public ConditionBuilder and(final Condition another) {
     Objects.requireNonNull(another, "provide another condition");
     this.root = this.root == null ? another : this.root.and(another);
@@ -43,27 +41,16 @@ public class ConditionBuilder implements Condition {
    * @param another condition to be composed
    * @return this builder
    */
-  @Override
   public ConditionBuilder or(final Condition another) {
     Objects.requireNonNull(another, "provide another condition");
     this.root = this.root == null ? another : this.root.or(another);
     return this;
   }
 
-  @Override
-  public CharSequence get() {
-    return this.root.get();
-  }
-
-  @Override
-  public void appendTo(final StringBuilder builder) {
-    if (this.root != null) {
-      this.root.appendTo(builder);
-    }
-  }
-
-  @Override
-  public ValueConstructor getValues() {
-    return this.root == null ? new ValueConstructor() : this.root.getValues();
+  /**
+   * @return condition or null if empty
+   */
+  public Condition build() {
+    return this.root;
   }
 }
