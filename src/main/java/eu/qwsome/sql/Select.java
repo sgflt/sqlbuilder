@@ -274,7 +274,7 @@ public class Select implements Query {
 
     @Override
     public ValueConstructor toValues() {
-      return Select.this.condition.getValues();
+      return Select.this.condition == null ? new ValueConstructor() : Select.this.condition.getValues();
     }
 
     /**
