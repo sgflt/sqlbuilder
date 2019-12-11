@@ -347,4 +347,21 @@ public class SelectTest {
     final ValueConstructor values = binding.toValues();
     assertThat(values).hasSize(5);
   }
+
+  @Test
+  public void testNullCondition() {
+    final ValueBinding binding = select()
+      .from("table")
+      .where(null);
+
+    final String sql = binding.toSql();
+
+    assertEquals(
+      sql,
+      "SELECT * FROM table"
+    );
+
+    final ValueConstructor values = binding.toValues();
+    assertThat(values).hasSize(0);
+  }
 }
