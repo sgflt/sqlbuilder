@@ -6,7 +6,7 @@
 
   <groupId>eu.qwsome</groupId>
   <artifactId>sql-builder</artifactId>
-  <version>1.0.0-M4</version>
+  <version>1.0.0-M5</version>
 
   <name>The raw sql builder</name>
 
