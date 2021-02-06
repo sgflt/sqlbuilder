@@ -26,7 +26,7 @@
     <repository>
       <id>github</id>
       <name>GitHub Packages</name>
-      <url>https://maven.pkg.github.com/sgflt/sql-builder</url>
+      <url>https://maven.pkg.github.com/sgflt/sqlbuilder</url>
     </repository>
   </distributionManagement>
 
