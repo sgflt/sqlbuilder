@@ -32,7 +32,7 @@ public class ValueConstructor implements Iterable<Object> {
    * @param holder holder that holds a value
    * @return {@link ValueConstructor} with values
    */
-  ValueConstructor add(final Iterable<Object> holder) {
+  public ValueConstructor add(final Iterable<Object> holder) {
     holder.forEach(this.values::add);
     return this;
   }

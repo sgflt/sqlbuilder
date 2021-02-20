@@ -208,7 +208,7 @@ public class Select implements Query {
   }
 
 
-  public class TableSelectedPhase implements Query {
+  public class TableSelectedPhase implements ValueBinding {
     /**
      * @see Select#toSql()
      */
@@ -256,6 +256,11 @@ public class Select implements Query {
      */
     public JoinPhase leftJoin(final String joinTable) {
       return new JoinPhase(joinTable, Type.LEFT);
+    }
+
+    @Override
+    public ValueConstructor toValues() {
+      return new ValueConstructor();
     }
   }
 
