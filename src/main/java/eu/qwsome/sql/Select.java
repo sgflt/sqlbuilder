@@ -260,7 +260,17 @@ public class Select implements Query {
 
     @Override
     public ValueConstructor toValues() {
-      return new ValueConstructor();
+      if (Select.this.joins.isEmpty()) {
+        return new ValueConstructor();
+      }
+
+      final var values = new ValueConstructor();
+
+      Select.this.joins.stream()
+        .map(Join::toValues)
+        .forEach(values::add);
+
+      return values;
     }
   }
 
@@ -279,7 +289,18 @@ public class Select implements Query {
 
     @Override
     public ValueConstructor toValues() {
-      return Select.this.condition == null ? new ValueConstructor() : Select.this.condition.getValues();
+      if (Select.this.condition == null && Select.this.joins.isEmpty()) {
+        return new ValueConstructor();
+      }
+
+      final var values = new ValueConstructor();
+
+      Select.this.joins.stream()
+        .map(Join::toValues)
+        .forEach(values::add);
+      values.add(Select.this.condition.getValues());
+
+      return values;
     }
 
     /**
@@ -344,10 +365,18 @@ public class Select implements Query {
 
     @Override
     public ValueConstructor toValues() {
-      if (Select.this.condition == null) {
+      if (Select.this.condition == null && Select.this.joins.isEmpty()) {
         return new ValueConstructor();
       }
-      return Select.this.condition.getValues();
+
+      final var values = new ValueConstructor();
+
+      Select.this.joins.stream()
+        .map(Join::toValues)
+        .forEach(values::add);
+      values.add(Select.this.condition.getValues());
+
+      return values;
     }
   }
 }

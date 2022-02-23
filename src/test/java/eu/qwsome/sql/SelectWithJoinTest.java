@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static eu.qwsome.sql.Column.column;
 import static eu.qwsome.sql.Select.select;
+import static eu.qwsome.sql.ValueLiteral.value;
 import static eu.qwsome.sql.condition.FieldComparator.comparedField;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -67,4 +68,30 @@ public class SelectWithJoinTest {
     assertThat(sql).isEqualTo("SELECT * FROM table JOIN joinedtable ON x = y LEFT JOIN anothertable ON a = b");
   }
 
+  @Test
+  public void testSimpleSelectWithValueConditionInJoin() {
+    final var select = select().from("table")
+      .join("joinedtable").on(comparedField(column("x")).isEqualTo(column("y")))
+      .leftJoin("anothertable").on(comparedField(column("a")).isEqualTo(value("b")));
+
+    final String sql = select.toSql();
+    assertThat(sql).isEqualTo("SELECT * FROM table JOIN joinedtable ON x = y LEFT JOIN anothertable ON a = ?");
+
+    final var values = select.toValues();
+    assertThat(values.toArray()).containsExactly("b");
+  }
+
+  @Test
+  public void testWhereSelectWithValueConditionInJoin() {
+    final var select = select().from("table")
+      .join("joinedtable").on(comparedField(column("x")).isEqualTo(column("y")))
+      .leftJoin("anothertable").on(comparedField(column("a")).isEqualTo(value("b")))
+      .where(comparedField(column("d")).isEqualTo(value("e")));
+
+    final String sql = select.toSql();
+    assertThat(sql).isEqualTo("SELECT * FROM table JOIN joinedtable ON x = y LEFT JOIN anothertable ON a = ? WHERE d = ?");
+
+    final var values = select.toValues();
+    assertThat(values.toArray()).containsExactly("b", "e");
+  }
 }

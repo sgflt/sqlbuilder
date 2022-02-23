@@ -2,6 +2,7 @@ package eu.qwsome.sql;
 
 import eu.qwsome.sql.api.Appendable;
 import eu.qwsome.sql.condition.Condition;
+import eu.qwsome.sql.condition.ValueConstructor;
 
 /**
  * Crate for join attributes.
@@ -44,6 +45,13 @@ abstract class Join implements Appendable {
       .append(" ON ");
 
     this.condition.appendTo(builder);
+  }
+
+  /**
+   * @return variables to be bound in ON clause's conditions
+   */
+  ValueConstructor toValues() {
+    return this.condition.getValues();
   }
 
   /**
