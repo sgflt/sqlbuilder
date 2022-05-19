@@ -298,7 +298,10 @@ public class Select implements Query {
       Select.this.joins.stream()
         .map(Join::toValues)
         .forEach(values::add);
-      values.add(Select.this.condition.getValues());
+
+      if (Select.this.condition != null) {
+        values.add(Select.this.condition.getValues());
+      }
 
       return values;
     }

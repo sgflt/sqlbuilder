@@ -1,5 +1,6 @@
 package eu.qwsome.sql;
 
+import eu.qwsome.sql.condition.ValueConstructor;
 import org.junit.jupiter.api.Test;
 
 import static eu.qwsome.sql.Column.column;
@@ -7,6 +8,7 @@ import static eu.qwsome.sql.Select.select;
 import static eu.qwsome.sql.ValueLiteral.value;
 import static eu.qwsome.sql.condition.FieldComparator.comparedField;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author Lukáš Kvídera
@@ -93,5 +95,23 @@ public class SelectWithJoinTest {
 
     final var values = select.toValues();
     assertThat(values.toArray()).containsExactly("b", "e");
+  }
+
+  @Test
+  public void testNullCondition() {
+    final ValueBinding binding = select()
+      .from("table")
+      .join("joinedtable").on(comparedField(column("x")).isEqualTo(column("y")))
+      .where(null);
+
+    final String sql = binding.toSql();
+
+    assertEquals(
+      sql,
+      "SELECT * FROM table JOIN joinedtable ON x = y"
+    );
+
+    final ValueConstructor values = binding.toValues();
+    assertThat(values).hasSize(0);
   }
 }
