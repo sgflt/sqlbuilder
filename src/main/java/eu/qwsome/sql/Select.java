@@ -40,6 +40,8 @@ public class Select implements Query {
    */
   private Condition condition;
   private OrderBy orderBy;
+  private GroupBy groupBy;
+
 
   /**
    * Creates select with single column.
@@ -50,6 +52,7 @@ public class Select implements Query {
     this.columns.add(column);
   }
 
+
   /**
    * Creates select with multiple columns.
    *
@@ -58,6 +61,7 @@ public class Select implements Query {
   private Select(final String[] columns) {
     this.columns.addAll(Arrays.asList(columns));
   }
+
 
   /**
    * This mehod creates a select instance that can be effectively used as following snippet:
@@ -77,6 +81,7 @@ public class Select implements Query {
   public static Select select() {
     return new Select("*");
   }
+
 
   /**
    * This mehod creates a select instance that can be effectively used as following snippet:
@@ -98,6 +103,7 @@ public class Select implements Query {
     return new Select(column);
   }
 
+
   /**
    * This mehod creates a select instance that can be effectively used as following snippet:
    * <p>
@@ -117,6 +123,7 @@ public class Select implements Query {
     return new Select(columns);
   }
 
+
   /**
    * This method enables use of distinction.
    *
@@ -126,6 +133,7 @@ public class Select implements Query {
     this.distinct = true;
     return this;
   }
+
 
   /**
    * This method sets a source table for select.
@@ -138,6 +146,7 @@ public class Select implements Query {
     return new TableSelectedPhase();
   }
 
+
   /**
    * This method sets a source source sub-query for select.
    *
@@ -147,9 +156,9 @@ public class Select implements Query {
    */
   public TableSelectedPhase from(final Query subquery, final String alias) {
     this.source = "( "
-      .concat(subquery.toSql())
-      .concat(" ) AS ")
-      .concat(alias);
+        .concat(subquery.toSql())
+        .concat(" ) AS ")
+        .concat(alias);
 
     return new TableSelectedPhase();
   }
@@ -164,10 +173,10 @@ public class Select implements Query {
   public String toSql() {
     final StringBuilder builder = new StringBuilder();
     builder.append("SELECT ")
-      .append(this.distinct ? "DISTINCT " : "")
-      .append(getColumns())
-      .append(" FROM ")
-      .append(this.source);
+        .append(this.distinct ? "DISTINCT " : "")
+        .append(getColumns())
+        .append(" FROM ")
+        .append(this.source);
 
     if (!this.joins.isEmpty()) {
       for (final Join join : this.joins) {
@@ -180,12 +189,18 @@ public class Select implements Query {
       this.condition.appendTo(builder);
     }
 
+    if (this.groupBy != null) {
+      this.groupBy.appendTo(builder);
+    }
+
     if (this.orderBy != null) {
       this.orderBy.appendTo(builder);
     }
 
+
     return builder.toString();
   }
+
 
   /**
    * Adds an order by clause to the statement.
@@ -197,6 +212,7 @@ public class Select implements Query {
     this.orderBy = new OrderBy(columns);
     return new OrderByPhase();
   }
+
 
   /**
    * This method generates a list of columns concatenated with comma.
@@ -217,6 +233,7 @@ public class Select implements Query {
       return Select.this.toSql();
     }
 
+
     /**
      * This method allows creation of where clause.
      *
@@ -228,6 +245,7 @@ public class Select implements Query {
       return new ConditionsBuiltPhase();
     }
 
+
     /**
      * Adds an order by clause to the statement.
      *
@@ -237,6 +255,7 @@ public class Select implements Query {
     public OrderByPhase orderBy(final Column... columns) {
       return Select.this.orderBy(columns);
     }
+
 
     /**
      * Adds a join clause to the statement.
@@ -248,6 +267,7 @@ public class Select implements Query {
       return new JoinPhase(joinTable, Type.INNER);
     }
 
+
     /**
      * Adds a left join clause to the statement.
      *
@@ -258,6 +278,7 @@ public class Select implements Query {
       return new JoinPhase(joinTable, Type.LEFT);
     }
 
+
     @Override
     public ValueConstructor toValues() {
       if (Select.this.joins.isEmpty()) {
@@ -267,10 +288,16 @@ public class Select implements Query {
       final var values = new ValueConstructor();
 
       Select.this.joins.stream()
-        .map(Join::toValues)
-        .forEach(values::add);
+          .map(Join::toValues)
+          .forEach(values::add);
 
       return values;
+    }
+
+
+    public GroupByPhase groupBy(final Column... groupByColumns) {
+      Select.this.groupBy = new GroupBy(groupByColumns);
+      return new GroupByPhase();
     }
   }
 
@@ -287,6 +314,7 @@ public class Select implements Query {
       return Select.this.toSql();
     }
 
+
     @Override
     public ValueConstructor toValues() {
       if (Select.this.condition == null && Select.this.joins.isEmpty()) {
@@ -296,8 +324,8 @@ public class Select implements Query {
       final var values = new ValueConstructor();
 
       Select.this.joins.stream()
-        .map(Join::toValues)
-        .forEach(values::add);
+          .map(Join::toValues)
+          .forEach(values::add);
 
       if (Select.this.condition != null) {
         values.add(Select.this.condition.getValues());
@@ -305,6 +333,7 @@ public class Select implements Query {
 
       return values;
     }
+
 
     /**
      * Adds an order by clause to the statement.
@@ -328,6 +357,7 @@ public class Select implements Query {
      */
     private final String joinTable;
     private final Type type;
+
 
     private JoinPhase(final String joinTable, final Type type) {
       this.joinTable = joinTable;
@@ -366,20 +396,51 @@ public class Select implements Query {
       return Select.this.toSql();
     }
 
+
     @Override
     public ValueConstructor toValues() {
-      if (Select.this.condition == null && Select.this.joins.isEmpty()) {
-        return new ValueConstructor();
-      }
+      return toValuesInternal();
+    }
 
-      final var values = new ValueConstructor();
 
-      Select.this.joins.stream()
-        .map(Join::toValues)
-        .forEach(values::add);
-      values.add(Select.this.condition.getValues());
+  }
 
-      return values;
+
+  public class GroupByPhase implements ValueBinding {
+    /**
+     * @return generated SQL
+     */
+    @Override
+    public String toSql() {
+      return Select.this.toSql();
+    }
+
+
+    @Override
+    public ValueConstructor toValues() {
+      return toValuesInternal();
+    }
+
+
+    OrderByPhase orderBy(final Column... orderByColumns) {
+      return Select.this.orderBy(orderByColumns);
     }
   }
+
+
+  private ValueConstructor toValuesInternal() {
+    if (Select.this.condition == null && Select.this.joins.isEmpty()) {
+      return new ValueConstructor();
+    }
+
+    final var values = new ValueConstructor();
+
+    Select.this.joins.stream()
+        .map(Join::toValues)
+        .forEach(values::add);
+    values.add(Select.this.condition.getValues());
+
+    return values;
+  }
+
 }
