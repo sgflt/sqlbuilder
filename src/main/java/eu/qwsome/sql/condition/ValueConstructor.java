@@ -13,6 +13,7 @@ public class ValueConstructor implements Iterable<Object> {
 
   private final List<Object> values = new ArrayList<>();
 
+
   /**
    * Adds a value that will be bound to the query.
    * Method is null safe.
@@ -24,6 +25,7 @@ public class ValueConstructor implements Iterable<Object> {
     addValueIfPresent(holder);
     return this;
   }
+
 
   /**
    * Adds all values that will be bound to the query.
@@ -40,10 +42,16 @@ public class ValueConstructor implements Iterable<Object> {
 
   private void addValueIfPresent(final ValueHolder holder) {
     final Object value = holder.getValue();
-    if (value != null) {
+    // subselect can have multiple conditions aggregated in ValueConstructor
+    if (value instanceof ValueConstructor) {
+      for (var v : ((ValueConstructor) value)) {
+        this.values.add(v);
+      }
+    } else if (value != null) {
       this.values.add(value);
     }
   }
+
 
   /**
    * @return iterator over stored values
@@ -52,6 +60,7 @@ public class ValueConstructor implements Iterable<Object> {
   public Iterator<Object> iterator() {
     return this.values.iterator();
   }
+
 
   /**
    * This method can be used for binding of objects with JdbcTemplate.

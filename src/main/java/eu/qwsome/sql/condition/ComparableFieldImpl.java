@@ -1,5 +1,9 @@
 package eu.qwsome.sql.condition;
 
+import static eu.qwsome.sql.SubselectValueHolder.subselect;
+
+import eu.qwsome.sql.Select;
+
 /**
  * @author Lukáš Kvídera
  */
@@ -59,6 +63,11 @@ public class ComparableFieldImpl implements ComparableField {
   @Override
   public Condition in(ValueHolder... another) {
     return new In(this.comparedField, another);
+  }
+
+  @Override
+  public Condition in(Select.ConditionsBuiltPhase subselect) {
+    return new In(this.comparedField, subselect(subselect));
   }
 
   @Override

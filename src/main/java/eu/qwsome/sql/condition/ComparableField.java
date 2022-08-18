@@ -1,6 +1,8 @@
 package eu.qwsome.sql.condition;
 
 
+import eu.qwsome.sql.Select;
+
 public interface ComparableField {
 
   /**
@@ -57,6 +59,15 @@ public interface ComparableField {
    * @return {@link Condition}
    */
   Condition in(final ValueHolder... another);
+
+  /**
+   * Returns a {@link Condition} checking containment of this in
+   * a set of values returned by subselect.
+   *
+   * @param subselect the set of values for comparison
+   * @return {@link Condition}
+   */
+  Condition in(final Select.ConditionsBuiltPhase subselect);
 
   /**
    * Returns a {@link Condition} checking if this matches a pattern.

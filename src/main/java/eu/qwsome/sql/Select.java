@@ -1,12 +1,12 @@
 package eu.qwsome.sql;
 
-import eu.qwsome.sql.Join.Type;
-import eu.qwsome.sql.condition.Condition;
-import eu.qwsome.sql.condition.ValueConstructor;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import eu.qwsome.sql.Join.Type;
+import eu.qwsome.sql.condition.Condition;
+import eu.qwsome.sql.condition.ValueConstructor;
 
 /**
  * This class simplifies dynamic sql generation.
