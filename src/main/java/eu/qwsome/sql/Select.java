@@ -97,6 +97,7 @@ public class Select implements Query {
    * }
    *
    * @param column name that will be selected
+   *
    * @return select builder
    */
   public static Select select(final String column) {
@@ -139,6 +140,7 @@ public class Select implements Query {
    * This method sets a source table for select.
    *
    * @param table to be used in FROM clause
+   *
    * @return next phase that allows only relevant methods
    */
   public TableSelectedPhase from(final String table) {
@@ -152,6 +154,7 @@ public class Select implements Query {
    *
    * @param subquery source sub-query
    * @param alias    alias of the sub-query
+   *
    * @return next selection phase
    */
   public TableSelectedPhase from(final Query subquery, final String alias) {
@@ -438,7 +441,10 @@ public class Select implements Query {
     Select.this.joins.stream()
         .map(Join::toValues)
         .forEach(values::add);
-    values.add(Select.this.condition.getValues());
+
+    if (this.condition != null) {
+      values.add(Select.this.condition.getValues());
+    }
 
     return values;
   }

@@ -24,7 +24,7 @@ public class SubselectValueHolder implements ValueHolder {
 
   @Override
   public String getSql() {
-    return this.value.toSql();
+    return '(' + this.value.toSql() + ')';
   }
 
 

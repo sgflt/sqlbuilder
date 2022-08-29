@@ -1,13 +1,13 @@
 package eu.qwsome.sql;
 
+import org.junit.jupiter.api.Test;
+
 import static eu.qwsome.sql.Column.column;
 import static eu.qwsome.sql.Select.select;
 import static eu.qwsome.sql.ValueLiteral.value;
 import static eu.qwsome.sql.condition.Exists.exists;
 import static eu.qwsome.sql.condition.FieldComparator.comparedField;
 import static org.assertj.core.api.Assertions.assertThat;
-
-import org.junit.jupiter.api.Test;
 
 class ExistsTest {
 
@@ -20,7 +20,7 @@ class ExistsTest {
             .where(comparedField(column("t1", "z")).isEqualTo(value("k")))));
 
     final var sql = select.toSql();
-    assertThat(sql).isEqualTo("SELECT * FROM table t2 WHERE EXISTS ( SELECT t1.abc FROM table t1 WHERE t1.z = ? )");
+    assertThat(sql).isEqualTo("SELECT * FROM table t2 WHERE EXISTS (SELECT t1.abc FROM table t1 WHERE t1.z = ?)");
 
     final var values = select.toValues();
     assertThat(values).containsExactly("k");
@@ -53,13 +53,12 @@ class ExistsTest {
     assertThat(sql).isEqualTo("SELECT *"
         + " FROM table t2"
         + " WHERE ( ( EXISTS ("
-        + " SELECT t1.abc FROM table t1 WHERE ( t1.z = ? AND t1.another <= ? "
-        + ") )"
+        + "SELECT t1.abc FROM table t1 WHERE ( t1.z = ? AND t1.another <= ? ))"
         + " OR t2.brm IS NULL )"
         + " AND EXISTS ("
-        + " SELECT t3.aby FROM last t3 WHERE EXISTS ("
-        + " SELECT t4.xaw FROM first t4 WHERE t4.ul IS NULL"
-        + " ) ) )"
+        + "SELECT t3.aby FROM last t3 WHERE EXISTS ("
+        + "SELECT t4.xaw FROM first t4 WHERE t4.ul IS NULL"
+        + ")) )"
     );
 
     final var values = select.toValues();

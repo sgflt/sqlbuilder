@@ -47,8 +47,7 @@ public class Exists implements Condition {
   @Override
   public void appendTo(final StringBuilder builder) {
     builder
-      .append("EXISTS ")
-      .append("( ");
+      .append("EXISTS ");
 
     int i = 0;
     for (; i < this.values.length - 1; i++) {
@@ -56,7 +55,6 @@ public class Exists implements Condition {
         .append(", ");
     }
 
-    builder.append(this.values[i].getSql())
-      .append(" )");
+    builder.append(this.values[i].getSql());
   }
 }
