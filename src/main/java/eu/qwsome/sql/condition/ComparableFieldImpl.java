@@ -1,8 +1,10 @@
 package eu.qwsome.sql.condition;
 
-import static eu.qwsome.sql.SubselectValueHolder.subselect;
-
 import eu.qwsome.sql.Select;
+
+import java.util.Collection;
+
+import static eu.qwsome.sql.SubselectValueHolder.subselect;
 
 /**
  * @author Lukáš Kvídera
@@ -41,7 +43,7 @@ public class ComparableFieldImpl implements ComparableField {
   }
 
   @Override
-  public Condition isLessOrEqualThan(ValueHolder another) {
+  public Condition isLessOrEqualThan(final ValueHolder another) {
     return new IsLessOrEqualThan(this.comparedField, another);
   }
 
@@ -56,27 +58,35 @@ public class ComparableFieldImpl implements ComparableField {
   }
 
   @Override
-  public Condition isGreaterOrEqualThan(ValueHolder another) {
+  public Condition isGreaterOrEqualThan(final ValueHolder another) {
     return new IsGreaterOrEqualThan(this.comparedField, another);
   }
 
   @Override
-  public Condition in(ValueHolder... another) {
+  public Condition in(final ValueHolder... another) {
     return new In(this.comparedField, another);
   }
 
   @Override
-  public Condition in(Select.ConditionsBuiltPhase subselect) {
+  public Condition in(final Collection<ValueHolder> another) {
+    return new In(
+      this.comparedField,
+      another.stream().toArray(ValueHolder[]::new)
+    );
+  }
+
+  @Override
+  public Condition in(final Select.ConditionsBuiltPhase subselect) {
     return new In(this.comparedField, subselect(subselect));
   }
 
   @Override
-  public Condition like(ValueHolder pattern) {
+  public Condition like(final ValueHolder pattern) {
     return new Like(this.comparedField, pattern);
   }
 
   @Override
-  public Condition notLike(ValueHolder pattern) {
+  public Condition notLike(final ValueHolder pattern) {
     return new NotLike(this.comparedField, pattern);
   }
 

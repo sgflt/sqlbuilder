@@ -3,6 +3,8 @@ package eu.qwsome.sql.condition;
 
 import eu.qwsome.sql.Select;
 
+import java.util.Collection;
+
 public interface ComparableField {
 
   /**
@@ -31,6 +33,7 @@ public interface ComparableField {
 
   /**
    * Returns a {@link Condition} with meaning this &lt;= another.
+   *
    * @param another field to be compared
    * @return {@link Condition}
    */
@@ -46,6 +49,7 @@ public interface ComparableField {
 
   /**
    * Returns a {@link Condition} with meaning this &gt;= another.
+   *
    * @param another field to be compared
    * @return {@link Condition}
    */
@@ -59,6 +63,15 @@ public interface ComparableField {
    * @return {@link Condition}
    */
   Condition in(final ValueHolder... another);
+
+  /**
+   * Returns a {@link Condition} checking containment of this in
+   * a set of another values.
+   *
+   * @param another the set of values for comparison
+   * @return {@link Condition}
+   */
+  Condition in(final Collection<ValueHolder> another);
 
   /**
    * Returns a {@link Condition} checking containment of this in
