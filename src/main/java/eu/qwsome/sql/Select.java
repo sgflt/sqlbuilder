@@ -1,12 +1,12 @@
 package eu.qwsome.sql;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import eu.qwsome.sql.Join.Type;
 import eu.qwsome.sql.condition.Condition;
 import eu.qwsome.sql.condition.ValueConstructor;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * This class simplifies dynamic sql generation.
@@ -97,7 +97,6 @@ public class Select implements Query {
    * }
    *
    * @param column name that will be selected
-   *
    * @return select builder
    */
   public static Select select(final String column) {
@@ -140,7 +139,6 @@ public class Select implements Query {
    * This method sets a source table for select.
    *
    * @param table to be used in FROM clause
-   *
    * @return next phase that allows only relevant methods
    */
   public TableSelectedPhase from(final String table) {
@@ -154,14 +152,13 @@ public class Select implements Query {
    *
    * @param subquery source sub-query
    * @param alias    alias of the sub-query
-   *
    * @return next selection phase
    */
   public TableSelectedPhase from(final Query subquery, final String alias) {
     this.source = "( "
-        .concat(subquery.toSql())
-        .concat(" ) AS ")
-        .concat(alias);
+      .concat(subquery.toSql())
+      .concat(" ) AS ")
+      .concat(alias);
 
     return new TableSelectedPhase();
   }
@@ -176,10 +173,10 @@ public class Select implements Query {
   public String toSql() {
     final StringBuilder builder = new StringBuilder();
     builder.append("SELECT ")
-        .append(this.distinct ? "DISTINCT " : "")
-        .append(getColumns())
-        .append(" FROM ")
-        .append(this.source);
+      .append(this.distinct ? "DISTINCT " : "")
+      .append(getColumns())
+      .append(" FROM ")
+      .append(this.source);
 
     if (!this.joins.isEmpty()) {
       for (final Join join : this.joins) {
@@ -216,6 +213,10 @@ public class Select implements Query {
     return new OrderByPhase();
   }
 
+  private GroupByPhase groupBy(final Column... groupByColumns) {
+    this.groupBy = new GroupBy(groupByColumns);
+    return new GroupByPhase();
+  }
 
   /**
    * This method generates a list of columns concatenated with comma.
@@ -291,16 +292,15 @@ public class Select implements Query {
       final var values = new ValueConstructor();
 
       Select.this.joins.stream()
-          .map(Join::toValues)
-          .forEach(values::add);
+        .map(Join::toValues)
+        .forEach(values::add);
 
       return values;
     }
 
 
     public GroupByPhase groupBy(final Column... groupByColumns) {
-      Select.this.groupBy = new GroupBy(groupByColumns);
-      return new GroupByPhase();
+      return Select.this.groupBy(groupByColumns);
     }
   }
 
@@ -327,8 +327,8 @@ public class Select implements Query {
       final var values = new ValueConstructor();
 
       Select.this.joins.stream()
-          .map(Join::toValues)
-          .forEach(values::add);
+        .map(Join::toValues)
+        .forEach(values::add);
 
       if (Select.this.condition != null) {
         values.add(Select.this.condition.getValues());
@@ -346,6 +346,10 @@ public class Select implements Query {
      */
     public OrderByPhase orderBy(final Column... columns) {
       return Select.this.orderBy(columns);
+    }
+
+    public GroupByPhase groupBy(final Column... columns) {
+      return Select.this.groupBy(columns);
     }
   }
 
@@ -439,8 +443,8 @@ public class Select implements Query {
     final var values = new ValueConstructor();
 
     Select.this.joins.stream()
-        .map(Join::toValues)
-        .forEach(values::add);
+      .map(Join::toValues)
+      .forEach(values::add);
 
     if (this.condition != null) {
       values.add(Select.this.condition.getValues());
