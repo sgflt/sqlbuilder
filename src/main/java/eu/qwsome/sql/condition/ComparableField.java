@@ -2,8 +2,10 @@ package eu.qwsome.sql.condition;
 
 
 import eu.qwsome.sql.Select;
+import eu.qwsome.sql.ValueLiteral;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 public interface ComparableField {
 
@@ -122,4 +124,15 @@ public interface ComparableField {
    */
   Condition isNotNull();
 
+  /**
+   * Converts plain objects to ValueLiterals
+   *
+   * @param objectValues to convert
+   * @return converted ValueLiterals
+   */
+  static Collection<ValueHolder> toValues(final Collection<Object> objectValues) {
+    return objectValues.stream()
+      .map(ValueLiteral::value)
+      .collect(Collectors.toList());
+  }
 }
