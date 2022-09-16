@@ -32,4 +32,9 @@ public class SubselectValueHolder implements ValueHolder {
   public Object getValue() {
     return this.value.toValues();
   }
+
+  @Override
+  public ValueHolder apply(final String functionName) {
+    return new FunctionWrappedHolder(functionName, this);
+  }
 }

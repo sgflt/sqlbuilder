@@ -18,4 +18,12 @@ public interface ValueHolder {
    * @return value to be bound in prepared statement
    */
   Object getValue();
+
+  /**
+   * Applies function to value holder
+   *
+   * @param functionName
+   * @return
+   */
+  ValueHolder apply(String functionName);
 }

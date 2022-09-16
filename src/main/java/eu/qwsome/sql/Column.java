@@ -50,4 +50,9 @@ public class Column implements ValueHolder {
   public String getValue() {
     return null;
   }
+
+  @Override
+  public ValueHolder apply(final String functionName) {
+    return new FunctionWrappedHolder(functionName, this);
+  }
 }

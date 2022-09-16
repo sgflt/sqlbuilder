@@ -4,7 +4,7 @@ import eu.qwsome.sql.condition.ValueHolder;
 
 /**
  * This class represents a literal value in sql.
- *
+ * <p>
  * For example: column = 1
  * where 1 is a literal.
  *
@@ -30,5 +30,10 @@ public class ValueLiteral implements ValueHolder {
   @Override
   public Object getValue() {
     return this.value;
+  }
+
+  @Override
+  public ValueHolder apply(final String functionName) {
+    return new FunctionWrappedHolder(functionName, this);
   }
 }
