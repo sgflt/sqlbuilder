@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * @author Lukáš Kvídera
  */
-public class SelectWithJoinTest {
+public class SelectWithTableJoinTest {
 
 
   @Test

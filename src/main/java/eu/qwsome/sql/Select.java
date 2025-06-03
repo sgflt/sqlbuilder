@@ -1,12 +1,12 @@
 package eu.qwsome.sql;
 
-import eu.qwsome.sql.Join.Type;
-import eu.qwsome.sql.condition.Condition;
-import eu.qwsome.sql.condition.ValueConstructor;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import eu.qwsome.sql.TableJoin.Type;
+import eu.qwsome.sql.condition.Condition;
+import eu.qwsome.sql.condition.ValueConstructor;
 
 /**
  * This class simplifies dynamic sql generation.
@@ -16,25 +16,21 @@ import java.util.List;
 public class Select implements Query {
 
   /**
-   * True if SELECT DISTINCT shall be used
-   */
-  private boolean distinct;
-
-  /**
-   * Datasource after FROM (might be table or sub-query).
-   */
-  private String source;
-
-  /**
    * List of columns that will be selected.
    */
   private final List<String> columns = new ArrayList<>();
-
   /**
    * A list of joins that generates multiple JOIN clauses.
    */
   private final List<Join> joins = new ArrayList<>();
-
+  /**
+   * True if SELECT DISTINCT shall be used
+   */
+  private boolean distinct;
+  /**
+   * Datasource after FROM (might be table or sub-query).
+   */
+  private String source;
   /**
    * Condition used in WHERE clause.
    */
@@ -97,6 +93,7 @@ public class Select implements Query {
    * }
    *
    * @param column name that will be selected
+   *
    * @return select builder
    */
   public static Select select(final String column) {
@@ -139,6 +136,7 @@ public class Select implements Query {
    * This method sets a source table for select.
    *
    * @param table to be used in FROM clause
+   *
    * @return next phase that allows only relevant methods
    */
   public TableSelectedPhase from(final String table) {
@@ -151,14 +149,15 @@ public class Select implements Query {
    * This method sets a source source sub-query for select.
    *
    * @param subquery source sub-query
-   * @param alias    alias of the sub-query
+   * @param alias alias of the sub-query
+   *
    * @return next selection phase
    */
   public TableSelectedPhase from(final Query subquery, final String alias) {
     this.source = "( "
-      .concat(subquery.toSql())
-      .concat(" ) AS ")
-      .concat(alias);
+        .concat(subquery.toSql())
+        .concat(" ) AS ")
+        .concat(alias);
 
     return new TableSelectedPhase();
   }
@@ -173,13 +172,13 @@ public class Select implements Query {
   public String toSql() {
     final StringBuilder builder = new StringBuilder();
     builder.append("SELECT ")
-      .append(this.distinct ? "DISTINCT " : "")
-      .append(getColumns())
-      .append(" FROM ")
-      .append(this.source);
+        .append(this.distinct ? "DISTINCT " : "")
+        .append(getColumns())
+        .append(" FROM ")
+        .append(this.source);
 
     if (!this.joins.isEmpty()) {
-      for (final Join join : this.joins) {
+      for (final var join : this.joins) {
         join.appendTo(builder);
       }
     }
@@ -206,6 +205,7 @@ public class Select implements Query {
    * Adds an order by clause to the statement.
    *
    * @param columns that defines ordering
+   *
    * @return order by phase
    */
   private OrderByPhase orderBy(final Column... columns) {
@@ -213,10 +213,31 @@ public class Select implements Query {
     return new OrderByPhase();
   }
 
+
   private GroupByPhase groupBy(final Column... groupByColumns) {
     this.groupBy = new GroupBy(groupByColumns);
     return new GroupByPhase();
   }
+
+
+  private ValueConstructor toValuesInternal() {
+    if (Select.this.condition == null && Select.this.joins.isEmpty()) {
+      return new ValueConstructor();
+    }
+
+    final var values = new ValueConstructor();
+
+    Select.this.joins.stream()
+        .map(Join::toValues)
+        .forEach(values::add);
+
+    if (this.condition != null) {
+      values.add(Select.this.condition.getValues());
+    }
+
+    return values;
+  }
+
 
   /**
    * This method generates a list of columns concatenated with comma.
@@ -242,6 +263,7 @@ public class Select implements Query {
      * This method allows creation of where clause.
      *
      * @param condition condition used to filter data
+     *
      * @return next phase that allows only relevant methods
      */
     public ConditionsBuiltPhase where(final Condition condition) {
@@ -254,6 +276,7 @@ public class Select implements Query {
      * Adds an order by clause to the statement.
      *
      * @param columns that defines ordering
+     *
      * @return order by phase
      */
     public OrderByPhase orderBy(final Column... columns) {
@@ -265,10 +288,24 @@ public class Select implements Query {
      * Adds a join clause to the statement.
      *
      * @param joinTable table to be joined
+     *
      * @return next phase that allows only relevant methods
      */
-    public JoinPhase join(final String joinTable) {
-      return new JoinPhase(joinTable, Type.INNER);
+    public TableJoinPhase join(final String joinTable) {
+      return new TableJoinPhase(joinTable, Type.INNER);
+    }
+
+
+    /**
+     * Adds a join clause to the statement.
+     *
+     * @param subselect to be joined
+     *      * @param alias for subselect
+     *
+     * @return next phase that allows only relevant methods
+     */
+    public SubselectJoinPhase join(final SubselectValueHolder subselect, final String alias) {
+      return new SubselectJoinPhase(subselect, alias, Type.INNER);
     }
 
 
@@ -276,26 +313,30 @@ public class Select implements Query {
      * Adds a left join clause to the statement.
      *
      * @param joinTable table to be joined
+     *
      * @return next phase that allows only relevant methods
      */
-    public JoinPhase leftJoin(final String joinTable) {
-      return new JoinPhase(joinTable, Type.LEFT);
+    public TableJoinPhase leftJoin(final String joinTable) {
+      return new TableJoinPhase(joinTable, Type.LEFT);
+    }
+
+
+    /**
+     * Adds a join clause to the statement.
+     *
+     * @param subselect to be joined
+     * @param alias for subselect
+     *
+     * @return next phase that allows only relevant methods
+     */
+    public SubselectJoinPhase leftJoin(final SubselectValueHolder subselect, final String alias) {
+      return new SubselectJoinPhase(subselect, alias, Type.LEFT);
     }
 
 
     @Override
     public ValueConstructor toValues() {
-      if (Select.this.joins.isEmpty()) {
-        return new ValueConstructor();
-      }
-
-      final var values = new ValueConstructor();
-
-      Select.this.joins.stream()
-        .map(Join::toValues)
-        .forEach(values::add);
-
-      return values;
+      return toValuesInternal();
     }
 
 
@@ -310,6 +351,7 @@ public class Select implements Query {
   public class ConditionsBuiltPhase implements ValueBinding {
     /**
      * @return generated SQL
+     *
      * @see Select#toSql()
      */
     @Override
@@ -320,21 +362,7 @@ public class Select implements Query {
 
     @Override
     public ValueConstructor toValues() {
-      if (Select.this.condition == null && Select.this.joins.isEmpty()) {
-        return new ValueConstructor();
-      }
-
-      final var values = new ValueConstructor();
-
-      Select.this.joins.stream()
-        .map(Join::toValues)
-        .forEach(values::add);
-
-      if (Select.this.condition != null) {
-        values.add(Select.this.condition.getValues());
-      }
-
-      return values;
+      return toValuesInternal();
     }
 
 
@@ -342,22 +370,23 @@ public class Select implements Query {
      * Adds an order by clause to the statement.
      *
      * @param columns that defines ordering
+     *
      * @return order by phase
      */
     public OrderByPhase orderBy(final Column... columns) {
       return Select.this.orderBy(columns);
     }
 
+
     public GroupByPhase groupBy(final Column... columns) {
       return Select.this.groupBy(columns);
     }
   }
 
-
   /**
    * Phase available after {@link TableSelectedPhase}
    */
-  public class JoinPhase {
+  public class TableJoinPhase {
 
     /**
      * Table that will be joined.
@@ -366,7 +395,7 @@ public class Select implements Query {
     private final Type type;
 
 
-    private JoinPhase(final String joinTable, final Type type) {
+    private TableJoinPhase(final String joinTable, final Type type) {
       this.joinTable = joinTable;
       this.type = type;
     }
@@ -376,22 +405,64 @@ public class Select implements Query {
      * Creates a join clues with condition.
      *
      * @param condition that will be used in ON clause
+     *
      * @return next phase that allows only relevant methods
      */
     public TableSelectedPhase on(final Condition condition) {
       switch (this.type) {
         case INNER:
-          Select.this.joins.add(new InnerJoin(this.joinTable, condition));
+          Select.this.joins.add(new InnerTableJoin(this.joinTable, condition));
           break;
         case LEFT:
-          Select.this.joins.add(new LeftJoin(this.joinTable, condition));
+          Select.this.joins.add(new LeftTableJoin(this.joinTable, condition));
           break;
         default:
           throw new UnsupportedOperationException(this.type.toString());
       }
       return new TableSelectedPhase();
     }
+  }
 
+  /**
+   * Phase available after {@link TableSelectedPhase}
+   */
+  public class SubselectJoinPhase {
+
+    /**
+     * Table that will be joined.
+     */
+    private final SubselectValueHolder subselect;
+    private final String alias;
+    private final Type type;
+
+
+    private SubselectJoinPhase(final SubselectValueHolder subselect, String alias, final Type type) {
+      this.subselect = subselect;
+      this.alias = alias;
+      this.type = type;
+    }
+
+
+    /**
+     * Creates a join clues with condition.
+     *
+     * @param condition that will be used in ON clause
+     *
+     * @return next phase that allows only relevant methods
+     */
+    public TableSelectedPhase on(final Condition condition) {
+      switch (this.type) {
+        case INNER:
+          Select.this.joins.add(new SubselectInnerJoin(this.subselect, this.alias, condition));
+          break;
+        case LEFT:
+          Select.this.joins.add(new SubselectLeftJoin(this.subselect, this.alias, condition));
+          break;
+        default:
+          throw new UnsupportedOperationException(this.type.toString());
+      }
+      return new TableSelectedPhase();
+    }
   }
 
   public class OrderByPhase implements ValueBinding {
@@ -412,7 +483,6 @@ public class Select implements Query {
 
   }
 
-
   public class GroupByPhase implements ValueBinding {
     /**
      * @return generated SQL
@@ -429,28 +499,9 @@ public class Select implements Query {
     }
 
 
-    OrderByPhase orderBy(final Column... orderByColumns) {
+    public OrderByPhase orderBy(final Column... orderByColumns) {
       return Select.this.orderBy(orderByColumns);
     }
-  }
-
-
-  private ValueConstructor toValuesInternal() {
-    if (Select.this.condition == null && Select.this.joins.isEmpty()) {
-      return new ValueConstructor();
-    }
-
-    final var values = new ValueConstructor();
-
-    Select.this.joins.stream()
-      .map(Join::toValues)
-      .forEach(values::add);
-
-    if (this.condition != null) {
-      values.add(Select.this.condition.getValues());
-    }
-
-    return values;
   }
 
 }

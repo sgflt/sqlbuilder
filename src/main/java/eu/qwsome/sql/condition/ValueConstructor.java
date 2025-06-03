@@ -21,7 +21,7 @@ public class ValueConstructor implements Iterable<Object> {
    * @param holder holder that holds a value
    * @return {@link ValueConstructor} with values
    */
-  ValueConstructor add(final ValueHolder holder) {
+  public ValueConstructor add(final ValueHolder holder) {
     addValueIfPresent(holder);
     return this;
   }

@@ -7,9 +7,9 @@ import eu.qwsome.sql.condition.Condition;
  *
  * @author Lukáš Kvídera
  */
-class LeftJoin extends Join {
+class LeftTableJoin extends TableJoin {
 
-  LeftJoin(final String joinTable, final Condition condition) {
+  LeftTableJoin(final String joinTable, final Condition condition) {
     super(joinTable, condition);
   }
 

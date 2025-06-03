@@ -7,11 +7,12 @@ import eu.qwsome.sql.condition.Condition;
  *
  * @author Lukáš Kvídera
  */
-class InnerJoin extends Join {
+class SubselectInnerJoin extends SubselectJoin {
 
-  InnerJoin(final String joinTable, final Condition condition) {
-    super(joinTable, condition);
+  SubselectInnerJoin(final SubselectValueHolder subselect, final String alias, final Condition condition) {
+    super(subselect, alias, condition);
   }
+
 
   @Override
   CharSequence getPrefix() {
