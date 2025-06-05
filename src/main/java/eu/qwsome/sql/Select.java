@@ -24,6 +24,10 @@ public class Select implements Query {
    */
   private final List<Join> joins = new ArrayList<>();
   /**
+   * A list of conditions from subselects
+   */
+  private final List<Condition> subselectConditions = new ArrayList<>();
+  /**
    * True if SELECT DISTINCT shall be used
    */
   private boolean distinct;
@@ -37,6 +41,10 @@ public class Select implements Query {
   private Condition condition;
   private OrderBy orderBy;
   private GroupBy groupBy;
+  /**
+   * This may contain conditions from unin used as subselect
+   */
+  private final List<ValueBinding> union = new ArrayList<>();
 
 
   /**
@@ -159,6 +167,12 @@ public class Select implements Query {
         .concat(" ) AS ")
         .concat(alias);
 
+    if (subquery instanceof ConditionsBuiltPhase) {
+      this.subselectConditions.add(((ConditionsBuiltPhase) subquery).getSelect().condition);
+    } else if (subquery instanceof ValueBinding) {
+      this.union.add((ValueBinding) subquery);
+    }
+
     return new TableSelectedPhase();
   }
 
@@ -175,7 +189,8 @@ public class Select implements Query {
         .append(this.distinct ? "DISTINCT " : "")
         .append(getColumns())
         .append(" FROM ")
-        .append(this.source);
+        .append(this.source)
+    ;
 
     if (!this.joins.isEmpty()) {
       for (final var join : this.joins) {
@@ -221,15 +236,22 @@ public class Select implements Query {
 
 
   private ValueConstructor toValuesInternal() {
-    if (Select.this.condition == null && Select.this.joins.isEmpty()) {
-      return new ValueConstructor();
-    }
-
     final var values = new ValueConstructor();
 
     Select.this.joins.stream()
         .map(Join::toValues)
-        .forEach(values::add);
+        .forEach(values::add)
+    ;
+
+    Select.this.subselectConditions.stream()
+        .map(Condition::getValues)
+        .forEach(values::add)
+    ;
+
+    Select.this.union.stream()
+        .map(ValueBinding::toValues)
+        .forEach(values::add)
+    ;
 
     if (this.condition != null) {
       values.add(Select.this.condition.getValues());
@@ -366,6 +388,11 @@ public class Select implements Query {
     }
 
 
+    Select getSelect() {
+      return Select.this;
+    }
+
+
     /**
      * Adds an order by clause to the statement.
      *
@@ -380,6 +407,11 @@ public class Select implements Query {
 
     public GroupByPhase groupBy(final Column... columns) {
       return Select.this.groupBy(columns);
+    }
+
+
+    public Union union(final ConditionsBuiltPhase otherSelect) {
+      return Union.of(this, otherSelect);
     }
   }
 

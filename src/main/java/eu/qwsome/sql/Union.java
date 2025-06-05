@@ -1,9 +1,9 @@
 package eu.qwsome.sql;
 
-import eu.qwsome.sql.condition.ValueConstructor;
-
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import eu.qwsome.sql.condition.ValueConstructor;
 
 /**
  * @author Lukáš Kvídera
@@ -40,7 +40,7 @@ public class Union implements ValueBinding {
 
   @Override
   public String toSql() {
-    final String keyword = this.all ? " UNION ALL " : " UNION ";
+    final var keyword = this.all ? " UNION ALL " : " UNION ";
     return Stream.of(this.queries)
       .map(Query::toSql)
       .collect(Collectors.joining(keyword));
@@ -48,7 +48,7 @@ public class Union implements ValueBinding {
 
   @Override
   public ValueConstructor toValues() {
-    final ValueConstructor values = new ValueConstructor();
+    final var values = new ValueConstructor();
     Stream.of(this.queries)
       .map(ValueBinding::toValues)
       .forEach(values::add);

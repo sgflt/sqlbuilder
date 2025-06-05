@@ -7,10 +7,9 @@ import static eu.qwsome.sql.condition.FieldComparator.comparedField;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.jupiter.api.Test;
-
 import eu.qwsome.sql.condition.Condition;
 import eu.qwsome.sql.condition.ValueConstructor;
+import org.junit.jupiter.api.Test;
 
 class SelectTest {
 
@@ -83,7 +82,8 @@ class SelectTest {
   @Test
   void testSelectWithColumns_SingleCondition() {
     final String sql = select("column42", "column49").from("table")
-        .where(comparedField(column("column1")).isEqualTo(column("column2"))).toSql();
+        .where(comparedField(column("column1")).isEqualTo(column("column2"))).toSql()
+        ;
 
     assertThat(sql).isEqualTo("SELECT column42, column49 FROM table WHERE column1 = column2");
   }
@@ -95,7 +95,8 @@ class SelectTest {
         .where(
             comparedField(column("column1")).isEqualTo(column("column2"))
                 .and(comparedField(column("column4")).isEqualTo(column("column5")))
-        ).toSql();
+        ).toSql()
+        ;
 
     assertThat(sql).isEqualTo("SELECT * FROM table WHERE ( column1 = column2 AND column4 = column5 )");
   }
@@ -108,7 +109,8 @@ class SelectTest {
             comparedField(column("column1")).isEqualTo(column("column2")).not()
                 .and(comparedField(column("column1")).isNotNull())
                 .and(comparedField(column("column4")).isEqualTo(column("column5")).not())
-        ).toSql();
+        ).toSql()
+        ;
 
     assertThat(sql).isEqualTo(
         "SELECT * FROM table WHERE ( ( NOT column1 = column2 AND column1 IS NOT NULL ) AND NOT column4 = column5 )");
@@ -121,7 +123,8 @@ class SelectTest {
         .where(
             comparedField(column("column1")).isEqualTo(column("column2"))
                 .and(comparedField(column("column4")).isEqualTo(column("column5")))
-        ).toSql();
+        ).toSql()
+        ;
 
     assertThat(sql).isEqualTo("SELECT column42 FROM table WHERE ( column1 = column2 AND column4 = column5 )");
   }
@@ -133,7 +136,8 @@ class SelectTest {
         .where(
             comparedField(column("column1")).isEqualTo(column("column2"))
                 .and(comparedField(column("column4")).isEqualTo(column("column5")))
-        ).toSql();
+        ).toSql()
+        ;
 
     assertThat(sql).isEqualTo("SELECT column42, column49 FROM table WHERE ( column1 = column2 AND column4 = column5 )");
   }
@@ -143,7 +147,8 @@ class SelectTest {
   void testSimpleSelect_Between() {
     final String sql = select().from("table")
         .where(comparedField(column("x")).isBetween(column("from"), column("to")))
-        .toSql();
+        .toSql()
+        ;
 
     assertThat(sql).isEqualTo("SELECT * FROM table WHERE x BETWEEN from AND to");
   }
@@ -156,7 +161,8 @@ class SelectTest {
             comparedField(column("x")).isBetween(column("from"), column("to"))
                 .or(comparedField(column("y")).isNull())
         )
-        .toSql();
+        .toSql()
+        ;
 
     assertThat(sql).isEqualTo("SELECT * FROM table WHERE ( x BETWEEN from AND to OR y IS NULL )");
   }
@@ -167,7 +173,8 @@ class SelectTest {
     final String sql = select()
         .from("table")
         .where(comparedField(column("column1")).isLessOrEqualThan(column("column2")))
-        .toSql();
+        .toSql()
+        ;
     assertThat(sql).isEqualTo("SELECT * FROM table WHERE column1 <= column2");
   }
 
@@ -177,7 +184,8 @@ class SelectTest {
     final String sql = select()
         .from("table")
         .where(comparedField(column("column1")).isGreaterOrEqualThan(column("column2")))
-        .toSql();
+        .toSql()
+        ;
     assertThat(sql).isEqualTo("SELECT * FROM table WHERE column1 >= column2");
   }
 
@@ -188,7 +196,8 @@ class SelectTest {
         .from("table")
         .where(comparedField(column("column1"))
             .in(value("val1"), value("val2"), value("val3")))
-        .toSql();
+        .toSql()
+        ;
     assertThat(sql).isEqualTo("SELECT * FROM table WHERE column1 IN ( ?, ?, ? )");
   }
 
@@ -198,7 +207,8 @@ class SelectTest {
     final String sql = select()
         .from("table")
         .where(comparedField(column("column1")).in(column("column2")))
-        .toSql();
+        .toSql()
+        ;
     assertThat(sql).isEqualTo("SELECT * FROM table WHERE column1 IN ( column2 )");
   }
 
@@ -208,7 +218,8 @@ class SelectTest {
     final String sql = select()
         .from("table")
         .where(comparedField(column("column1")).like(value("%some%pattern__%")))
-        .toSql();
+        .toSql()
+        ;
     assertThat(sql).isEqualTo("SELECT * FROM table WHERE column1 LIKE ?");
   }
 
@@ -218,7 +229,8 @@ class SelectTest {
     final String sql = select()
         .from("table")
         .where(comparedField(column("column1")).like(column("column2")))
-        .toSql();
+        .toSql()
+        ;
     assertThat(sql).isEqualTo("SELECT * FROM table WHERE column1 LIKE column2");
   }
 
@@ -228,7 +240,8 @@ class SelectTest {
     final String sql = select()
         .from("table")
         .where(comparedField(column("column1")).notLike(value("%some%pattern__%")))
-        .toSql();
+        .toSql()
+        ;
     assertThat(sql).isEqualTo("SELECT * FROM table WHERE column1 NOT LIKE ?");
   }
 
@@ -238,7 +251,8 @@ class SelectTest {
     final String sql = select()
         .from("table")
         .where(comparedField(column("column1")).notLike(column("column2")))
-        .toSql();
+        .toSql()
+        ;
     assertThat(sql).isEqualTo("SELECT * FROM table WHERE column1 NOT LIKE column2");
   }
 
@@ -255,10 +269,11 @@ class SelectTest {
                         .and(comparedField(column("b")).isLessThan(column("x")))
                         .and(comparedField(column("c")).isGreaterThan(column("x"))
                         )
-                )).toSql();
+                )).toSql()
+        ;
 
     assertThat(sql).isEqualTo("SELECT * FROM table WHERE " +
-        "( ( ( y1 IS NULL AND x BETWEEN from AND to ) OR y IS NULL ) OR ( ( a IS NOT NULL AND b < x ) AND c > x ) )");
+                              "( ( ( y1 IS NULL AND x BETWEEN from AND to ) OR y IS NULL ) OR ( ( a IS NOT NULL AND b < x ) AND c > x ) )");
   }
 
 
@@ -274,7 +289,8 @@ class SelectTest {
     final String sql = select().from("table")
         .where(comparedField(column("x")).isEqualTo(column("y")))
         .orderBy(column("x"))
-        .toSql();
+        .toSql()
+        ;
     assertThat(sql).isEqualTo("SELECT * FROM table WHERE x = y ORDER BY x");
   }
 
@@ -290,10 +306,11 @@ class SelectTest {
 
     final String sql = select().from("table")
         .where(conditionRoot)
-        .toSql();
+        .toSql()
+        ;
     assertThat(sql).isEqualTo(
         "SELECT * FROM table WHERE ( ( ( ( ( ( ( ( ( ( xxx = yyy AND 0 = 1 ) AND 1 = 2 ) AND 2 = 3 )" +
-            " AND 3 = 4 ) AND 4 = 5 ) AND 5 = 6 ) AND 6 = 7 ) AND 7 = 8 ) AND 8 = 9 ) AND 9 = 10 )");
+        " AND 3 = 4 ) AND 4 = 5 ) AND 5 = 6 ) AND 6 = 7 ) AND 7 = 8 ) AND 8 = 9 ) AND 9 = 10 )");
   }
 
 
@@ -301,7 +318,8 @@ class SelectTest {
   void testSimpleSelectWithLiteralCondition() {
     final String sql = select().from("table")
         .where(comparedField(column("x")).isEqualTo(value(32)))
-        .toSql();
+        .toSql()
+        ;
     assertThat(sql).isEqualTo("SELECT * FROM table WHERE x = ?");
   }
 
@@ -310,7 +328,8 @@ class SelectTest {
   void testSimpleSelectWithLiteralBetween() {
     final String sql = select().from("table")
         .where(comparedField(column("x")).isBetween(value(32), value(43)))
-        .toSql();
+        .toSql()
+        ;
     assertThat(sql).isEqualTo("SELECT * FROM table WHERE x BETWEEN ? AND ?");
   }
 
@@ -319,7 +338,8 @@ class SelectTest {
   void testSimpleSelectWithLiteralBetween_LiteralAsSource() {
     final String sql = select().from("table")
         .where(comparedField(value("x")).isBetween(column("c"), value(43)))
-        .toSql();
+        .toSql()
+        ;
     assertThat(sql).isEqualTo("SELECT * FROM table WHERE ? BETWEEN c AND ?");
   }
 
@@ -328,7 +348,8 @@ class SelectTest {
   void testValueBindingWithLiteralBetween() {
     final ValueConstructor values = select().from("table")
         .where(comparedField(column("x")).isBetween(value(32), value(43)))
-        .toValues();
+        .toValues()
+        ;
 
     assertThat(values.toArray()).isEqualTo(new Object[] {32, 43});
   }
@@ -338,7 +359,8 @@ class SelectTest {
   void testValueBindingWithLiteralBetween_LiteralAsSource() {
     final ValueConstructor values = select().from("table")
         .where(comparedField(value("x")).isBetween(column("c"), value(43)))
-        .toValues();
+        .toValues()
+        ;
 
     assertThat(values.toArray()).isEqualTo(new Object[] {"x", 43});
   }
@@ -357,7 +379,8 @@ class SelectTest {
                 )
                 .or(comparedField(column("a")).isNotEqualTo(value(55)))
         )
-        .toValues();
+        .toValues()
+        ;
 
     assertThat(values.toArray()).isEqualTo(new Object[] {"x", 43, 28, 32, 50, 55});
     assertThat(select.toSql())
@@ -374,7 +397,8 @@ class SelectTest {
     ).where(
         comparedField(column("a", "col1")).in(value("whatever"), value("another"), value("value"))
             .and(comparedField(value(2)).isGreaterThan(value(0)))
-    ).orderBy(column("a", "col1"));
+    ).orderBy(column("a", "col1"))
+        ;
     final String sql = binding.toSql();
 
     assertEquals(
@@ -383,7 +407,10 @@ class SelectTest {
     );
 
     final ValueConstructor values = binding.toValues();
-    assertThat(values).hasSize(5);
+    assertThat(values)
+        .hasSize(6)
+        .containsExactly("qqq", "whatever", "another", "value", 2, 0)
+    ;
   }
 
 
@@ -391,7 +418,8 @@ class SelectTest {
   void testNullCondition() {
     final ValueBinding binding = select()
         .from("table")
-        .where(null);
+        .where(null)
+        ;
 
     final String sql = binding.toSql();
 
@@ -409,7 +437,8 @@ class SelectTest {
   void testGroupBy() {
     final ValueBinding binding = select()
         .from("table")
-        .groupBy(column("1"), column("2"), column("3"));
+        .groupBy(column("1"), column("2"), column("3"))
+        ;
 
     final String sql = binding.toSql();
 
@@ -428,7 +457,8 @@ class SelectTest {
     final var binding = select()
         .from("table")
         .groupBy(column("1"), column("2"), column("3"))
-        .orderBy(column("1"), column("2"), column("3"));
+        .orderBy(column("1"), column("2"), column("3"))
+        ;
 
     final String sql = binding.toSql();
 
