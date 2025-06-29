@@ -6,7 +6,7 @@ package eu.qwsome.sql
 import eu.qwsome.sql.condition.ValueConstructor
 
 class Union(
-    private val queries: Array<ValueBinding>,
+    private vararg val queries: ValueBinding,
     private val all: Boolean,
 ) : ValueBinding {
 
@@ -30,7 +30,7 @@ class Union(
          */
         @JvmStatic
         fun of(vararg queries: ValueBinding): Union {
-            return Union(arrayOf(*queries), false)
+            return Union(*queries, all = false)
         }
 
         /**
@@ -41,7 +41,7 @@ class Union(
          */
         @JvmStatic
         fun allOf(vararg queries: ValueBinding): Union {
-            return Union(arrayOf(*queries), true)
+            return Union(*queries, all = true)
         }
     }
 }

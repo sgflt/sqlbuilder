@@ -8,7 +8,7 @@ package eu.qwsome.sql
 import eu.qwsome.sql.condition.Condition
 import eu.qwsome.sql.condition.ValueConstructor
 
-class Select private constructor(columns: Array<String>) : Query {
+class Select private constructor(vararg columns: String) : Query {
 
     /**
      * List of columns that will be selected.
@@ -126,12 +126,12 @@ class Select private constructor(columns: Array<String>) : Query {
      * @return order by phase
      */
     private fun orderBy(vararg columns: Column): OrderByPhase {
-        orderBy = OrderBy(arrayOf(*columns))
+        orderBy = OrderBy(*columns)
         return OrderByPhase()
     }
 
     private fun groupBy(vararg groupByColumns: Column): GroupByPhase {
-        groupBy = GroupBy(arrayOf(*groupByColumns))
+        groupBy = GroupBy(*groupByColumns)
         return GroupByPhase()
     }
 
@@ -372,7 +372,7 @@ class Select private constructor(columns: Array<String>) : Query {
          */
         @JvmStatic
         fun select(): Select {
-            return Select(arrayOf("*"))
+            return Select("*")
         }
 
         /**
@@ -393,7 +393,7 @@ class Select private constructor(columns: Array<String>) : Query {
          */
         @JvmStatic
         fun select(column: String): Select {
-            return Select(arrayOf(column))
+            return Select(column)
         }
 
         /**
@@ -413,7 +413,7 @@ class Select private constructor(columns: Array<String>) : Query {
          */
         @JvmStatic
         fun select(vararg columns: String): Select {
-            return Select(arrayOf(*columns))
+            return Select(*columns)
         }
     }
 }

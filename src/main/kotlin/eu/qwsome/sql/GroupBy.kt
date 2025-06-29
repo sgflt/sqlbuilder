@@ -5,7 +5,7 @@ package eu.qwsome.sql
 
 import eu.qwsome.sql.api.Appendable
 
-internal class GroupBy(private val columns: Array<Column>) : Appendable {
+internal class GroupBy(private vararg val columns: Column) : Appendable {
 
     init {
         require(columns.isNotEmpty()) { "Provide valid columns!" }
