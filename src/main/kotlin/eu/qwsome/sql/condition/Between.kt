@@ -18,9 +18,6 @@ class Between(
     }
 
     override fun getValues(): ValueConstructor {
-        return ValueConstructor()
-            .add(field)
-            .add(from)
-            .add(to)
+        return ValueConstructor().addAll(field, from, to)
     }
 }

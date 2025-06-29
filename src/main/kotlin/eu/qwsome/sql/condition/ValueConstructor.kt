@@ -16,9 +16,8 @@ class ValueConstructor : Iterable<Any> {
      * @param holder holder that holds a value
      * @return [ValueConstructor] with values
      */
-    fun add(holder: ValueHolder): ValueConstructor {
+    fun add(holder: ValueHolder): ValueConstructor = apply {
         addValueIfPresent(holder)
-        return this
     }
 
     /**
@@ -28,9 +27,19 @@ class ValueConstructor : Iterable<Any> {
      * @param holder holder that holds a value
      * @return [ValueConstructor] with values
      */
-    fun add(holder: Iterable<Any>): ValueConstructor {
+    fun add(holder: Iterable<Any>): ValueConstructor = apply {
         values.addAll(holder)
-        return this
+    }
+
+    /**
+     * Adds multiple value holders efficiently.
+     * Method is null safe.
+     *
+     * @param holders multiple holders to add
+     * @return [ValueConstructor] with values
+     */
+    fun addAll(vararg holders: ValueHolder): ValueConstructor = apply {
+        holders.forEach { addValueIfPresent(it) }
     }
 
     private fun addValueIfPresent(holder: ValueHolder) {

@@ -15,9 +15,7 @@ abstract class BiCondition(
 ) : Condition {
 
     override fun getValues(): ValueConstructor {
-        return ValueConstructor()
-            .add(first)
-            .add(second)
+        return ValueConstructor().addAll(first, second)
     }
 
     override fun appendTo(builder: StringBuilder) {
