@@ -39,8 +39,7 @@ class ValueConstructor : Iterable<Any> {
         when (value) {
             is ValueConstructor -> values.addAll(value)
 
-            null -> { /* do nothing */
-            }
+            null -> Unit
 
             else -> values.add(value)
         }
@@ -49,9 +48,7 @@ class ValueConstructor : Iterable<Any> {
     /**
      * @return iterator over stored values
      */
-    override fun iterator(): Iterator<Any> {
-        return values.iterator()
-    }
+    override fun iterator(): Iterator<Any> = values.iterator()
 
     /**
      * This method can be used for binding of objects with JdbcTemplate.

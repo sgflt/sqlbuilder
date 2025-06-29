@@ -6,7 +6,5 @@ package eu.qwsome.sql.condition
 object FieldComparator {
 
     @JvmStatic
-    fun comparedField(value: ValueHolder): ComparableField {
-        return ComparableFieldImpl(value)
-    }
+    fun comparedField(value: ValueHolder): ComparableField = ComparableFieldImpl(value)
 }

@@ -10,20 +10,14 @@ import eu.qwsome.sql.condition.withFunction
 
 class SubselectValueHolder private constructor(private val value: Select.ConditionsBuiltPhase) : ValueHolder {
 
-    override fun getSql(): String {
-        return "(${value.toSql()})"
-    }
+    override fun getSql(): String = "(${value.toSql()})"
 
-    override fun getValue(): Any? {
-        return value.toValues()
-    }
+    override fun getValue(): Any? = value.toValues()
 
     override fun apply(functionName: String): ValueHolder = withFunction(functionName)
 
     companion object {
         @JvmStatic
-        fun subselect(value: Select.ConditionsBuiltPhase): SubselectValueHolder {
-            return SubselectValueHolder(value)
-        }
+        fun subselect(value: Select.ConditionsBuiltPhase) = SubselectValueHolder(value)
     }
 }

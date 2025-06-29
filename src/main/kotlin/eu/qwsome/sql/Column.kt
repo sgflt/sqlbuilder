@@ -24,9 +24,7 @@ class Column private constructor(private val name: String) : ValueHolder {
          * @return a [Column] instance
          */
         @JvmStatic
-        fun column(name: String): Column {
-            return Column(name)
-        }
+        fun column(name: String) = Column(name)
 
         /**
          * Constructs column with name and sourceTableAlias.
@@ -35,8 +33,6 @@ class Column private constructor(private val name: String) : ValueHolder {
          * @param name of column
          */
         @JvmStatic
-        fun column(sourceTableAlias: String, name: String): Column {
-            return Column("$sourceTableAlias.$name")
-        }
+        fun column(sourceTableAlias: String, name: String) = Column("$sourceTableAlias.$name")
     }
 }

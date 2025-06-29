@@ -21,8 +21,6 @@ class ValueLiteral private constructor(private val value: Any?) : ValueHolder {
 
     companion object {
         @JvmStatic
-        fun value(value: Any?): ValueLiteral {
-            return ValueLiteral(value)
-        }
+        fun value(value: Any?) = ValueLiteral(value)
     }
 }

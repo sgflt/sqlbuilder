@@ -371,9 +371,7 @@ class Select private constructor(vararg columns: String) : Query {
          * @return select builder
          */
         @JvmStatic
-        fun select(): Select {
-            return Select("*")
-        }
+        fun select() = Select("*")
 
         /**
          * This method creates a select instance that can be effectively used as following snippet:
@@ -392,9 +390,7 @@ class Select private constructor(vararg columns: String) : Query {
          * @return select builder
          */
         @JvmStatic
-        fun select(column: String): Select {
-            return Select(column)
-        }
+        fun select(column: String) = Select(column)
 
         /**
          * This method creates a select instance that can be effectively used as following snippet:
