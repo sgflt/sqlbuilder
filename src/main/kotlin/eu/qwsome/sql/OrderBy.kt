@@ -13,12 +13,12 @@ internal class OrderBy(private vararg val columns: Column) : Appendable {
 
     override fun appendTo(builder: StringBuilder) {
         builder.append(" ORDER BY ")
-        columns.map { it.getSql() }
-            .forEachIndexed { index, columnSql ->
-                if (index > 0) {
-                    builder.append(',')
-                }
-                builder.append(columnSql)
+        columns.forEachIndexed { index, column ->
+            if (index > 0) {
+                builder.append(',')
             }
+
+            builder.append(column.getSql())
+        }
     }
 }

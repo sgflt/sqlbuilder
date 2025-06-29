@@ -37,11 +37,7 @@ class ValueConstructor : Iterable<Any> {
         val value = holder.getValue()
         // subselect can have multiple conditions aggregated in ValueConstructor
         when (value) {
-            is ValueConstructor -> {
-                for (v in value) {
-                    values.add(v)
-                }
-            }
+            is ValueConstructor -> values.addAll(value)
 
             null -> { /* do nothing */
             }

@@ -18,9 +18,7 @@ class SubselectValueHolder private constructor(private val value: Select.Conditi
         return value.toValues()
     }
 
-    override fun apply(functionName: String): ValueHolder {
-        return this.withFunction(functionName)
-    }
+    override fun apply(functionName: String): ValueHolder = withFunction(functionName)
 
     companion object {
         @JvmStatic
