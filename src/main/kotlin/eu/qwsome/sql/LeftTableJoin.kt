@@ -12,7 +12,5 @@ internal class LeftTableJoin(
     condition: Condition,
 ) : TableJoin(joinTable, condition) {
 
-    override fun getPrefix(): CharSequence {
-        return " LEFT"
-    }
+    override fun getPrefix(): CharSequence = " LEFT"
 }

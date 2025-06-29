@@ -12,7 +12,5 @@ internal class InnerTableJoin(
     condition: Condition,
 ) : TableJoin(joinTable, condition) {
 
-    override fun getPrefix(): CharSequence {
-        return ""
-    }
+    override fun getPrefix(): CharSequence = ""
 }

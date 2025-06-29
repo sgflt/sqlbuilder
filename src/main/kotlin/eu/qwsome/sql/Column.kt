@@ -14,9 +14,7 @@ class Column private constructor(private val name: String) : ValueHolder {
 
     override fun getValue(): String? = null
 
-    override fun apply(functionName: String): ValueHolder {
-        return withFunction(functionName)
-    }
+    override fun apply(functionName: String): ValueHolder = withFunction(functionName)
 
     companion object {
         /**

@@ -138,9 +138,9 @@ class Select private constructor(columns: Array<String>) : Query {
     private fun toValuesInternal(): ValueConstructor {
         val values = ValueConstructor()
 
-        joins.map { it.toValues() }.forEach { values.add(it) }
-        subselectConditions.map { it.getValues() }.forEach { values.add(it) }
-        union.map { it.toValues() }.forEach { values.add(it) }
+        joins.forEach { values.add(it.toValues()) }
+        subselectConditions.forEach { values.add(it.getValues()) }
+        union.forEach { values.add(it.toValues()) }
 
         condition?.let { values.add(it.getValues()) }
 
@@ -290,15 +290,11 @@ class Select private constructor(columns: Array<String>) : Query {
          * @return next phase that allows only relevant methods
          */
         fun on(condition: Condition): TableSelectedPhase {
-            when (type) {
-                TableJoin.Type.INNER -> {
-                    this@Select.joins.add(InnerTableJoin(joinTable, condition))
-                }
-
-                TableJoin.Type.LEFT -> {
-                    this@Select.joins.add(LeftTableJoin(joinTable, condition))
-                }
+            val join = when (type) {
+                TableJoin.Type.INNER -> InnerTableJoin(joinTable, condition)
+                TableJoin.Type.LEFT -> LeftTableJoin(joinTable, condition)
             }
+            this@Select.joins.add(join)
             return TableSelectedPhase()
         }
     }
@@ -319,15 +315,11 @@ class Select private constructor(columns: Array<String>) : Query {
          * @return next phase that allows only relevant methods
          */
         fun on(condition: Condition): TableSelectedPhase {
-            when (type) {
-                SubselectJoin.Type.INNER -> {
-                    this@Select.joins.add(SubselectInnerJoin(subselect, alias, condition))
-                }
-
-                SubselectJoin.Type.LEFT -> {
-                    this@Select.joins.add(SubselectLeftJoin(subselect, alias, condition))
-                }
+            val join = when (type) {
+                SubselectJoin.Type.INNER -> SubselectInnerJoin(subselect, alias, condition)
+                SubselectJoin.Type.LEFT -> SubselectLeftJoin(subselect, alias, condition)
             }
+            this@Select.joins.add(join)
             return TableSelectedPhase()
         }
     }

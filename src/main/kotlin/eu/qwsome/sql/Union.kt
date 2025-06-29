@@ -17,7 +17,7 @@ class Union(
 
     override fun toValues(): ValueConstructor {
         val values = ValueConstructor()
-        queries.map { it.toValues() }.forEach { values.add(it) }
+        queries.forEach { values.add(it.toValues()) }
         return values
     }
 

@@ -17,9 +17,7 @@ class ValueLiteral private constructor(private val value: Any?) : ValueHolder {
 
     override fun getValue(): Any? = value
 
-    override fun apply(functionName: String): ValueHolder {
-        return this.withFunction(functionName)
-    }
+    override fun apply(functionName: String): ValueHolder = withFunction(functionName)
 
     companion object {
         @JvmStatic
