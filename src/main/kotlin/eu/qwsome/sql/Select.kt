@@ -97,29 +97,26 @@ class Select private constructor(columns: Array<String>) : Query {
      *
      * @return generated SQL
      */
-    override fun toSql(): String {
-        val builder = StringBuilder()
-        builder.append("SELECT ")
-            .append(if (distinct) "DISTINCT " else "")
-            .append(getColumns())
-            .append(" FROM ")
-            .append(source)
+    override fun toSql(): String = buildString {
+        append("SELECT ")
+        append(if (distinct) "DISTINCT " else "")
+        append(getColumns())
+        append(" FROM ")
+        append(source)
 
         if (joins.isNotEmpty()) {
             joins.forEach { join ->
-                join.appendTo(builder)
+                join.appendTo(this)
             }
         }
 
         condition?.let {
-            builder.append(" WHERE ")
-            it.appendTo(builder)
+            append(" WHERE ")
+            it.appendTo(this)
         }
 
-        groupBy?.appendTo(builder)
-        orderBy?.appendTo(builder)
-
-        return builder.toString()
+        groupBy?.appendTo(this)
+        orderBy?.appendTo(this)
     }
 
     /**
