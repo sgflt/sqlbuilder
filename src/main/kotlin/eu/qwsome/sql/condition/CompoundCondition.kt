@@ -10,11 +10,9 @@ abstract class CompoundCondition(
     private val second: Condition,
 ) : Condition {
 
-    override fun getValues(): ValueConstructor {
-        return ValueConstructor()
-            .add(first.getValues())
-            .add(second.getValues())
-    }
+    override fun getValues() = ValueConstructor()
+        .add(first.getValues())
+        .add(second.getValues())
 
     override fun appendTo(builder: StringBuilder) {
         builder.append("( ")

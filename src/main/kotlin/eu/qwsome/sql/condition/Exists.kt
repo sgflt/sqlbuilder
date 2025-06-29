@@ -27,13 +27,9 @@ class Exists private constructor(private vararg val values: ValueHolder) : Condi
 
     companion object {
         @JvmStatic
-        fun exists(values: ValueHolder): Exists {
-            return Exists(values)
-        }
+        fun exists(values: ValueHolder) = Exists(values)
 
         @JvmStatic
-        fun exists(subselect: Select.ConditionsBuiltPhase): Exists {
-            return Exists(SubselectValueHolder.subselect(subselect))
-        }
+        fun exists(subselect: Select.ConditionsBuiltPhase) = Exists(SubselectValueHolder.subselect(subselect))
     }
 }

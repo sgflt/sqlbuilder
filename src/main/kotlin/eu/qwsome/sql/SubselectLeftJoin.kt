@@ -13,7 +13,5 @@ internal class SubselectLeftJoin(
     condition: Condition,
 ) : SubselectJoin(subselect, alias, condition) {
 
-    override fun getPrefix(): CharSequence {
-        return " LEFT"
-    }
+    override fun getPrefix(): CharSequence = " LEFT"
 }

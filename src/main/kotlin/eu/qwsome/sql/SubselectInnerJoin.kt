@@ -13,7 +13,5 @@ internal class SubselectInnerJoin(
     condition: Condition,
 ) : SubselectJoin(subselect, alias, condition) {
 
-    override fun getPrefix(): CharSequence {
-        return ""
-    }
+    override fun getPrefix(): CharSequence = ""
 }

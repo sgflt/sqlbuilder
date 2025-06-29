@@ -14,10 +14,8 @@ abstract class SubselectJoin(
     private val condition: Condition,
 ) : Join {
 
-    fun get(): CharSequence {
-        return buildString {
-            appendTo(this)
-        }
+    fun get(): CharSequence = buildString {
+        appendTo(this)
     }
 
     override fun appendTo(builder: StringBuilder) {
@@ -34,11 +32,9 @@ abstract class SubselectJoin(
     /**
      * @return variables to be bound in ON clause's conditions
      */
-    override fun toValues(): ValueConstructor {
-        return ValueConstructor()
-            .add(subselect)
-            .add(condition.getValues())
-    }
+    override fun toValues(): ValueConstructor = ValueConstructor()
+        .add(subselect)
+        .add(condition.getValues())
 
     /**
      * @return type of join

@@ -13,10 +13,8 @@ abstract class TableJoin(
     private val condition: Condition,
 ) : Join {
 
-    fun get(): CharSequence {
-        return buildString {
-            appendTo(this)
-        }
+    fun get(): CharSequence = buildString {
+        appendTo(this)
     }
 
     /**
@@ -36,9 +34,7 @@ abstract class TableJoin(
     /**
      * @return variables to be bound in ON clause's conditions
      */
-    override fun toValues(): ValueConstructor {
-        return condition.getValues()
-    }
+    override fun toValues(): ValueConstructor = condition.getValues()
 
     /**
      * This enum determines type of join.

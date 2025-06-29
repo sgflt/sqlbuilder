@@ -5,9 +5,7 @@ package eu.qwsome.sql.condition
 
 class Not(private val condition: Condition) : Condition {
 
-    override fun getValues(): ValueConstructor {
-        return condition.getValues()
-    }
+    override fun getValues(): ValueConstructor = condition.getValues()
 
     override fun appendTo(builder: StringBuilder) {
         builder.append("NOT ")

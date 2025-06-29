@@ -14,9 +14,7 @@ abstract class BiCondition(
     private val second: ValueHolder,
 ) : Condition {
 
-    override fun getValues(): ValueConstructor {
-        return ValueConstructor().addAll(first, second)
-    }
+    override fun getValues(): ValueConstructor = ValueConstructor().addAll(first, second)
 
     override fun appendTo(builder: StringBuilder) {
         builder.append(first.getSql())

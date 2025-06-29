@@ -34,9 +34,7 @@ class ConditionBuilder private constructor() {
     /**
      * @return condition or null if empty
      */
-    fun build(): Condition? {
-        return root
-    }
+    fun build(): Condition? = root
 
     companion object {
         /**
@@ -45,8 +43,6 @@ class ConditionBuilder private constructor() {
          * @return [ConditionBuilder]
          */
         @JvmStatic
-        fun create(): ConditionBuilder {
-            return ConditionBuilder()
-        }
+        fun create(): ConditionBuilder = ConditionBuilder()
     }
 }

@@ -29,9 +29,7 @@ class Union(
          * @return the union clause
          */
         @JvmStatic
-        fun of(vararg queries: ValueBinding): Union {
-            return Union(*queries, all = false)
-        }
+        fun of(vararg queries: ValueBinding): Union = Union(*queries, all = false)
 
         /**
          * Creates UNION ALL clause.
@@ -40,8 +38,6 @@ class Union(
          * @return the union all clause
          */
         @JvmStatic
-        fun allOf(vararg queries: ValueBinding): Union {
-            return Union(*queries, all = true)
-        }
+        fun allOf(vararg queries: ValueBinding): Union = Union(*queries, all = true)
     }
 }

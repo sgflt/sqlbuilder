@@ -14,10 +14,8 @@ interface Condition : Appendable {
      *
      * @return string representation
      */
-    fun get(): CharSequence {
-        return buildString {
-            appendTo(this)
-        }
+    fun get(): CharSequence = buildString {
+        appendTo(this)
     }
 
     /**
@@ -26,9 +24,7 @@ interface Condition : Appendable {
      * @param another condition to be composed
      * @return this AND another
      */
-    fun and(another: Condition): Condition {
-        return And(this, another)
-    }
+    fun and(another: Condition): Condition = And(this, another)
 
     /**
      * Returns compound condition as a logical OR.
@@ -36,18 +32,14 @@ interface Condition : Appendable {
      * @param another condition to be composed
      * @return this OR another
      */
-    fun or(another: Condition): Condition {
-        return Or(this, another)
-    }
+    fun or(another: Condition): Condition = Or(this, another)
 
     /**
      * Returns negation of this condition.
      *
      * @return NOT this
      */
-    fun not(): Condition {
-        return Not(this)
-    }
+    operator fun not(): Condition = Not(this)
 
     /**
      * Returns a [ValueConstructor] that contains bindable values
