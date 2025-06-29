@@ -53,9 +53,8 @@ class Select private constructor(vararg columns: String) : Query {
      *
      * @return select with enabled distinction
      */
-    fun distinct(): Select {
+    fun distinct(): Select = apply {
         distinct = true
-        return this
     }
 
     /**

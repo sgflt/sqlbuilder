@@ -17,9 +17,8 @@ class ConditionBuilder private constructor() {
      * @param another condition to be composed
      * @return this builder
      */
-    fun and(another: Condition): ConditionBuilder {
+    fun and(another: Condition): ConditionBuilder = apply {
         root = root?.and(another) ?: another
-        return this
     }
 
     /**
@@ -28,9 +27,8 @@ class ConditionBuilder private constructor() {
      * @param another condition to be composed
      * @return this builder
      */
-    fun or(another: Condition): ConditionBuilder {
+    fun or(another: Condition): ConditionBuilder = apply {
         root = root?.or(another) ?: another
-        return this
     }
 
     /**
