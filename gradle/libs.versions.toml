@@ -1,0 +1,15 @@
+[versions]
+kotlin = "2.2.0"
+junit = "5.9.0"
+assertj = "3.23.1"
+jmh = "1.35"
+
+[libraries]
+kotlin-stdlib = { module = "org.jetbrains.kotlin:kotlin-stdlib", version.ref = "kotlin" }
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junit" }
+assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertj" }
+jmh-core = { module = "org.openjdk.jmh:jmh-core", version.ref = "jmh" }
+jmh-processor = { module = "org.openjdk.jmh:jmh-generator-annprocess", version.ref = "jmh" }
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
