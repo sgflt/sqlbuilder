@@ -14,9 +14,9 @@ abstract class TableJoin(
 ) : Join {
 
     fun get(): CharSequence {
-        val builder = StringBuilder()
-        appendTo(builder)
-        return builder
+        return buildString {
+            appendTo(this)
+        }
     }
 
     /**
