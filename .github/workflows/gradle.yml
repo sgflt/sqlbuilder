@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ master ]
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   build:
 
@@ -25,5 +29,6 @@ jobs:
       - name: Publish package
         run: ./gradlew publish
         env:
+          USERNAME: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
