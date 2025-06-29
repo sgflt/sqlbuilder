@@ -99,15 +99,15 @@ class Select private constructor(vararg columns: String) : Query {
      */
     override fun toSql(): String = buildString {
         append("SELECT ")
-        append(if (distinct) "DISTINCT " else "")
+        if (distinct) {
+            append("DISTINCT ")
+        }
         append(getColumns())
         append(" FROM ")
         append(source)
 
-        if (joins.isNotEmpty()) {
-            joins.forEach { join ->
-                join.appendTo(this)
-            }
+        joins.forEach { join ->
+            join.appendTo(this)
         }
 
         condition?.let {
